@@ -432,6 +432,70 @@ where `N12` is the global index of the node located at the middle of the edge be
 `N13` is the index for the node between `N1` and `N3`, and so on.
 
 
+
+### Flexible mesh data containers
+
+Flexible mesh data containers allows one to encode a wide range of mesh data using a simple 2-D array.
+
+#### MeshNode
+`"MeshNode"` defines a flexible container for the storage of vertex coordinates and the associated 
+properties. It must be defined by an N-by-M array, where N is the number of vertices, and M is the 
+number of coordinates (D) plus the number of numerical properties (P) attached along each vertex, i.e.
+
+`M = D + P`
+
+The partition of `M` (into `D` and `P` columns) and the interpreations of the numerical 
+property values are application dependent.
+
+```
+"MeshNode": [
+    [x11, y11, z11, ..., w1D, ..., v11, v12, ..., v1P],
+    [x21, y21, z21, ..., w2D, ..., v21, v22, ..., v2P],
+    [x31, y31, z31, ..., w3D, ..., v31, v32, ..., v3P],
+    ...
+]
+```
+
+#### MeshSurf
+`"MeshSurf"` defines a flexible container for the storage of surface patches and the associated 
+properties. It must be defined by an N-by-M array, where N is the number of surface elements, and M is the 
+number of vertices per element (K) plus the number of numerical properties (P) attached along each vertex, i.e.
+
+`M = K + P`
+
+The partition of `M` (into `K` and `P` columns) and the interpreations of the numerical 
+property values are application dependent.
+
+```
+"MeshSurf": [
+    [N11, N11, ..., N1K, ..., v11, v12, ..., v1P],
+    [N21, N21, ..., N2K, ..., v21, v22, ..., v2P],
+    [N31, N31, ..., N3K, ..., v31, v32, ..., v3P],
+    ...
+]
+```
+
+#### MeshElem
+`"MeshElem"` defines a flexible container for the storage of volumetric elements and the associated 
+properties. It must be defined by an N-by-M array, where N is the number of surface elements, and M is the 
+number of vertices per element (K) plus the number of numerical properties (P) attached along each vertex, i.e.
+
+`M = K + P`
+
+The partition of `M` (into `K` and `P` columns) and the interpreations of the numerical 
+property values are application dependent.
+
+```
+"MeshElem": [
+    [N11, N11, ..., N1K, ..., v11, v12, ..., v1P],
+    [N21, N21, ..., N2K, ..., v21, v22, ..., v2P],
+    [N31, N31, ..., N3K, ..., v31, v32, ..., v3P],
+    ...
+]
+```
+
+
+
 Recommended File Specifiers
 ------------------------------
 
