@@ -7,9 +7,9 @@
 - **Version**: 0.4
 - **Abstract**:
 
-> JMesh is a JSON and JData compliant file format for storage and interchange of
-unstructured mesh and geometric data, such as triangular and tetrahedral meshes. 
-Same as JData, a JMesh file utilizes the JavaScript Object Notation (JSON) 
+> JMesh is a portable and extensible file format for storage and interchange of
+unstructured mesh and geometric data, including triangular and tetrahedral meshes. 
+Built upon the JData specification, a JMesh file utilizes the JavaScript Object Notation (JSON) 
 [RFC4627] and Universal Binary JSON (UBJSON) constructs to serialize and encode
 mesh data structures, therefore, it can be directly processed by most existing
 JSON and UBJSON parsers. In this specification, we define a list of 
@@ -26,7 +26,7 @@ fabrication and computer graphics rendering.
     * [Background](#background)
     * [JMesh specification overview](#jmesh-specification-summary)
 - [Grammar](#grammar)
-    * [Text-based JData storage grammar](#text-based-jdata-storage-grammar)
+    * [Text-based  storage grammar](#text-based-jdata-storage-grammar)
     * [Binary JData storage grammar](#binary-jdata-storage-grammar)
 
 
@@ -116,15 +116,152 @@ grouping.
 Grammar
 ------------------------
 
-### JMesh Storage Grammar
-
-The JMesh files are JData specification compliant. The same as JData, it has
+All JMesh files are JData specification compliant. The same as JData, it has
 both a text-based format based on JSON serialization and a binary-based format
 based on the UBJSON serialization. Briefly, the text-based JMesh is a 
 valid JSON file with the extension to support concatenated JSON objects; the
 binary-format JMesh is a valid UBJSON with the grammar extension to support 
-N-D array.
+N-D array. Please refer to the JData specification for the definitions.
 
+
+Mesh Data Keywords
+------------------------
+In this section, we define dedicated JSON `"name"` keywords that can be used to 
+define discretized shapes, or mesh, objects.
+
+### Points
+
+#### MeshPoint1
+
+```
+"MeshPoint1": [x1,x2,x3,...]
+```
+#### MeshPoint2
+
+```
+"MeshPoint2": [
+    [x1,y1],
+    [x2,y2],
+    [x3,y3],
+    ...
+]
+```
+#### MeshPoint3
+
+```
+"MeshPoint3": [
+    [x1,y1,z1],
+    [x2,y2,z2],
+    [x3,y3,z3],
+    ...
+]
+```
+
+#### MeshPoint4
+
+```
+"MeshPoint4": [
+    [x1,y1,z1,w1],
+    [x2,y2,z2,w2],
+    [x3,y3,z3,w3],
+    ...
+]
+```
+
+### Line segments and curves
+
+#### MeshLine
+
+```
+"MeshLine": [N1, N2, N3, ... ]
+```
+
+#### MeshEdge
+
+```
+"MeshEdge": [
+    [N1,N2],
+    [N2,y2],
+    [x3,y3],
+    ...
+]
+```
+
+
+### Surfaces
+
+#### MeshTri3
+
+```
+"MeshTri3": [
+    [N11, N12, N13],
+    [N21, N22, N23],
+    [N31, N32, N33],
+    ...
+]
+```
+
+#### MeshQuad4
+
+```
+"MeshQuad4": [
+    [N11, N12, N13, N14],
+    [N21, N22, N23, N24],
+    [N31, N32, N33, N24],
+    ...
+]
+```
+#### MeshPoly
+
+```
+"MeshQuad4": [
+    [N11, N12, N13, ...],
+    [N21, N22, N23, N24, ...],
+    [N31, N32, N33, N24, ...],
+    ...
+]
+```
+
+### Solid Elements
+
+#### MeshTet4
+```
+"MeshTet4": [
+    [N11, N12, N13, N14],
+    [N21, N22, N23, N24],
+    [N31, N32, N33, N34],
+    ...
+]
+```
+
+#### MeshHex8
+```
+"MeshHex8": [
+    [N11, N12, N13, ..., N18],
+    [N21, N22, N23, ..., N28],
+    [N31, N32, N33, ..., N28],
+    ...
+]
+```
+#### MeshPyramid5
+```
+"MeshHex8": [
+    [N11, N12, N13, ..., N15],
+    [N21, N22, N23, ..., N25],
+    [N31, N32, N33, ..., N25],
+    ...
+]
+```
+
+#### MeshTet10
+```
+"MeshTet10": [
+    [N11, N12, N13, ..., N1_10],
+    [N21, N22, N23, ..., N2_10],
+    [N31, N32, N33, ..., N2_10],
+    ...
+]
+```
 
 
 Recommended File Specifiers
