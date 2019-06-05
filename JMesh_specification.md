@@ -49,11 +49,11 @@ arrays - also known as the "structured data", mesh and shape descriptors
 are often categorized under the "unstructured data" due to the irregular 
 data dimensions and non-coalesced index-mapped data. Efficient storage 
 of such unstructured and index-mapped data has been a challenge, resulting 
-in a (large set of incompatible)[https://en.wikipedia.org/wiki/List_of_file_formats#3D_graphics] 
+in a [large set of incompatible](https://en.wikipedia.org/wiki/List_of_file_formats#3D_graphics) 
 file formats that are largely application specific and difficult 
 to standardize.
 
-For example, the widely used STL format (for 3-D printing) supports only 
+For example, the widely used STL format for 3-D printing supports only 
 triangular surfaces, and is not able to encode other shape constructs such as
 tetrahedral or hexahedral solid objects. Similarly, the PLY (Polygon File 
 Format), OFF (Object File Format) and the Wavefront OBJ file formats are 
@@ -62,10 +62,10 @@ metadata support such as triangle colors and node/surface norms. While
 parsing and interchanging these simple mesh data formats are 
 straightforward and easy to implement, the limited functionalities and
 lack of the ability to extend for more complex shapes and metadata makes
-it difficult to standardize. On the other hand, more capable and flexible
-shape storage formats are often associated with commercial 3-D CAD software,
-such as 3DS, FBX, and DWG formats, with relatively large and complex 
-parsers, which are often not widely available.
+it difficult to capture other more sophisticated geometries. On the other 
+hand, more capable and flexible shape storage formats are often associated 
+with commercial 3-D CAD software, such as 3DS, FBX, and DWG formats, with 
+relatively large and complex parsers, which are often not widely available.
 
 Due to the great diversity of geometric discretization schemes, the form 
 and organization of mesh data may vary greatly from one application to 
@@ -80,17 +80,19 @@ and wide adoptions of binary JSON-like format, such as UBJSON and
 MessagePack, also add complementary features such as support for typed 
 data, faster file sizes and processing speed. The JData specification
 provides the foundation for serializing complex hierarchical data using
-JSON/UBJSON constructs. 
+JSON/UBJSON constructs. This permits us to define language and library-neutral
+geometry and mesh descriptions using the simple and extensible constructs
+from JSOB and UBJSON formats.
 
 
 ### JMesh specification overview
 
 JMesh is an extensible framework to store complex geometry and mesh related 
 data using the JData representation, with a syntax compatible to the widely 
-used JSON and UBJSON file specifications. JMesh adds a semantic layer to 
+used JSON and UBJSON file formats. JMesh adds a semantic layer to 
 a JSON structure by attaching meanings and format specifications to a list of 
 reserved "name" fields (or simply, JMesh keywords). These JMesh keywords allow
-one to unambiguously store points, edges, surfaces and tetrahedral meshes
+one to unambiguously store vertices, edges, surfaces and tetrahedral meshes
 of 1-D, 2-D, 3-D or even higher dimensions.
 
 The purpose of this document is to define the text and binary JMesh format 
@@ -99,14 +101,14 @@ over the JSON/UBJSON data storage syntax to map various types of mesh and
 geometrical data. Such semantic layer includes
 
 - a list of dedicated `"name"` fields, or keywords, that define the containers 
-  of various nodes, elements, shape primitives
+  of various nodes, elements, and shape primitives
 - a list of dedicated `"name"` fields and formats to facilitate the spatial
-  organization, grouping and interaction of shapes
+  organization, grouping and interaction of geometric objects
 - a list of metadata keywords for enriched data annotation
 
 In the following sections, we will clarify the basic JMesh grammar and define 
 mesh data container formats to encode a wide-range of unstructured mesh and
-shape data types, including points, lines, contours, shape primitives, 
+shape data types, including vertices, lines, contours, shape primitives, 
 triangular surfaces, tetrahedral meshes, and other surface and solid elements
 In addition, we will define a set of structures to represent the interactions
 and relationships between shape constructs, such as Boolean operations and 
@@ -117,13 +119,15 @@ Grammar
 ------------------------
 
 All JMesh files are JData specification compliant. The same as JData, it has
-both a text-based format based on JSON serialization and a binary-based format
-based on the UBJSON serialization. Briefly, the text-based JMesh is a 
-valid JSON file with the extension to support concatenated JSON objects; the
-binary-format JMesh is a valid UBJSON with the grammar extension to support 
-N-D array. Please refer to the JData specification for the definitions.
+both a text format based on JSON serialization and a binary format
+based on the UBJSON serialization scheme. 
 
-Nearly all supported mesh data containers (named JData nodes) can be defined 
+Briefly, the text-based JMesh is a valid JSON file with the extension to 
+support concatenated JSON objects; the binary-format JMesh is a valid UBJSON 
+with the extended syntax to support N-D array. Please refer to the JData 
+specification for the definitions.
+
+Nearly all supported mesh data containers (i.e. named JData nodes) can be defined 
 using one of the two forms: an N-D array or a structure. For each JMesh data
 keyword defined the following sections, we define the requirements on the data 
 dimensions if one chooses the array form, and and the required and optional 
@@ -152,6 +156,9 @@ or using the "annotated storage" format as
        "_ArrayData_": [v1,v2,v3,...]
   }
 ```
+The direct storage format and the annotated storage format are equivallent. In the 
+below sections, we use mostly the direct format to explain the data format, but
+one shall also store the data using the annotated format.
 
 ### Structure form
 
@@ -174,8 +181,8 @@ container may have the below subfields:
 Here, only the `"Data"` subfield is required, and it must have an array-value that 
 is the same as the "direct storage" form. The optional `"_DataInfo_"` is the JData 
 construct for storing metadata associated with this structure. The other optional 
-`"Properties"` subfield allows one to store additional data attached to this 
-shape/mesh element. The `"Properties"` subfield can be an array or structure with 
+`"Properties"` subfield allows one to store additional data with this shape/mesh 
+element. The `"Properties"` subfield can be an array or structure with 
 additional subfields.
 
 
@@ -185,13 +192,17 @@ In this section, we define dedicated JSON `"name"` keywords that can be used to
 define discretized shapes objects (or meshes).
 
 In most of the cases, the data container keywords defined in this section have a 
-prefix of "Mesh". Many of the keywords ends with a numerical value which typically
+prefix of `"Mesh"`. Many of the keywords ends with a numerical value which typically
 represents the column number of the data when stored in the array format.
 
+All indices - integers mapping between data entries - shall have a start value of 
+1. 
 
-### Points
+### Vertices
 
-For all point data objects, the "Properties" can store the below optional 
+A vertex represents a discrete spatial location in the N-dimensional space.
+
+For all vertex data objects, the "Properties" can store the below optional 
 subfields:
 ```
 "Norm": [...]
@@ -202,13 +213,27 @@ subfields:
 ```
 
 #### MeshVertex1
-`"MeshVertex1"` defines a 1-D position vector. 
+`"MeshVertex1"` defines a 1-D position vector. It must be defined as an N-by-1 or
+1-by-N numerical vector, where N equals to the total number of vertices. The values
+in this vector shall be the coordinates of the 1-D vertices.
 
 ```
 "MeshVertex1": [x1,x2,x3,...]
 ```
+or
+```
+"MeshVertex1": [
+   x1,
+   x2,
+   x3,
+   ...
+]
+```
+
 #### MeshVertex2
-`"MeshVertex2"` defines a 2-D position vector. 
+`"MeshVertex2"` defines a 2-D position vector. It must be defined as an N-by-2 
+numerical array where N is the total number of vertices. Each row of this array
+contains the coordinates of the vertex.
 
 ```
 "MeshVertex2": [
@@ -219,7 +244,8 @@ subfields:
 ]
 ```
 #### MeshVertex3
-`"MeshVertex3"` defines a 3-D position vector. 
+`"MeshVertex3"` defines a 3-D position vector. Similar to MeshVertex2, it must 
+be defined as an N-by-3 numerical array.
 
 ```
 "MeshVertex3": [
@@ -231,7 +257,8 @@ subfields:
 ```
 
 #### MeshVertex4
-`"MeshVertex4"` defines a 4-D position vector. 
+`"MeshVertex4"` defines a 4-D position vector. Similar to MeshVertex2, it must 
+be defined as an N-by-4 numerical array.
 
 ```
 "MeshVertex4": [
@@ -256,8 +283,9 @@ subfields:
 #### MeshLine
 
 `"MeshLine"` defines a set of line segments using an ordered 1-D list of node indices 
-(starting from 1). If an index is 0, it marks end of the current line segment
-and start a new line segment from the next index.
+(starting from 1). It must be defined by an 1-by-N or N-by-1 vector of integers. 
+If an index is 0, it marks the end of the current line segment and starts a new line 
+segment from the next index.
 
 ```
 "MeshLine": [N1, N2, N3, ... ]
@@ -266,7 +294,8 @@ and start a new line segment from the next index.
 #### MeshEdge
 
 `"MeshEdge"` defines a set of line segments using a 2-D array with a pair of node indices
-in each row of the array.
+in each row of the array. It must be defined by an N-by-2 integer array, where N is the
+total number of edges.
 
 ```
 "MeshEdge": [
@@ -291,6 +320,9 @@ subfields:
 
 
 #### MeshTri3
+`"MeshTri3"` defines a discretized surface made of triangles with a triplet of node indices
+in each row of the array. It must be defined by an N-by-3 integer array, where N is the 
+total number of triangles.
 
 ```
 "MeshTri3": [
@@ -302,6 +334,9 @@ subfields:
 ```
 
 #### MeshQuad4
+`"MeshQuad4"` defines a discretized surface made of quadrilateral with a quadruplet of node indices
+in each row of the array. It must be defined by an N-by-4 integer array, where N is the 
+total number of quadrilaterals.
 
 ```
 "MeshQuad4": [
@@ -312,12 +347,14 @@ subfields:
 ]
 ```
 #### MeshPoly
+`"MeshPoly"` defines a discretized surface made of polygons of uniform or varied edge sizes. 
+It must be defined by an array with elements of integer vectors of equal or varied lengths.
 
 ```
 "MeshPoly": [
     [N11, N12, N13, ...],
     [N21, N22, N23, N24, ...],
-    [N31, N32, N33, N24, ...],
+    [N31, N32, N33, N34, ..., ...],
     ...
 ]
 ```
@@ -333,6 +370,9 @@ subfields:
 ```
 
 #### MeshTet4
+`"MeshTet4"` defines a discretized volumetric domain made of tetrahedral elements, with each
+element made of a quadruplet of node indices. It must be defined by an N-by-4 integer array, where 
+N is the total number of tetrahedra.
 ```
 "MeshTet4": [
     [N11, N12, N13, N14],
@@ -343,6 +383,9 @@ subfields:
 ```
 
 #### MeshHex8
+`"MeshHex8"` defines a discretized volumetric domain made of 8-node hexahedral elements, with each
+element specified by a 8-tuple node index. It must be defined by an N-by-8 integer array, where 
+N is the total number of hexahedra.
 ```
 "MeshHex8": [
     [N11, N12, N13, ..., N18],
@@ -352,6 +395,9 @@ subfields:
 ]
 ```
 #### MeshPyramid5
+`"MeshHex8"` defines a discretized volumetric domain made of 5-node pyramid elements, with each
+element specified by a 5-tuple node index. It must be defined by an N-by-5 integer array, where 
+N is the total number of pyramid.
 ```
 "MeshPyramid5": [
     [N11, N12, N13, ..., N15],
@@ -362,6 +408,10 @@ subfields:
 ```
 
 #### MeshTet10
+`"MeshTet10"` defines a discretized volumetric domain made of 10-node straightline tetrahedral 
+elements, with each element specified by a 10-tuple node index. It must be defined by an 
+N-by-10 integer array, where N is the total number of 10-node tetrahedra. 
+
 ```
 "MeshTet10": [
     [N11, N12, N13, ..., N1_10],
@@ -370,6 +420,16 @@ subfields:
     ...
 ]
 ```
+
+The first 4 columns of the array specifies the indices of the 4 vertices of the tetrahedron, 
+identical to `"MeshTet4"`, and the last 6 columns of the array specifies the mid-edge node indices, 
+sorted in the below order:
+
+```
+  [N1, N2, N3, N4, N12, N13, N14, N22, N23, N34]
+```
+where `N12` is the global index of the node located at the middle of the edge between node N1 and N2;
+`N13` is the index for the node between `N1` and `N3`, and so on.
 
 
 Recommended File Specifiers
