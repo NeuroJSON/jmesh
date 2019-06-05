@@ -14,7 +14,7 @@ Built upon the JData specification, a JMesh file utilizes the JavaScript Object 
 mesh data structures, therefore, it can be directly processed by most existing
 JSON and UBJSON parsers. In this specification, we define a list of 
 JData-compatible keywords to encode complex geometric shapes, inluding N-dimensional 
-points, lines, surfaces, solids, shape primitives, their interactions and spatial
+points, curves, surfaces, solid elements, shape primitives, their interactions and spatial
 relations, together with their associated properties, such as numerical values, 
 gray-scales, colors, and other properties related to scientific research, 3-D 
 fabrication and computer graphics rendering.
@@ -123,33 +123,106 @@ valid JSON file with the extension to support concatenated JSON objects; the
 binary-format JMesh is a valid UBJSON with the grammar extension to support 
 N-D array. Please refer to the JData specification for the definitions.
 
+Nearly all supported mesh data containers (named JData nodes) can be defined 
+using one of the two forms: an N-D array or a structure. For each JMesh data
+keyword defined the following sections, we define the requirements on the data 
+dimensions if one chooses the array form, and and the required and optional 
+subfields if one chooses the structure form.
+
+### Array form
+
+For simple data, one can use the "array form" to store the data under a container 
+keyword. In such case, the format of the data must follow the "N-Dimensional 
+Array Storage Keyword" rules defined in the JData specification. For example, 
+one can store a 1-D or 2-D array using the direct storage format as
+```
+ "jmesh_container_1d": [v1,v2,...,vn]
+ "jmesh_container_2d": [
+    [v11,v12,...,v1n],
+    [v21,v22,...,v2n],
+    ...
+    [vm1,vm2,...,vmn]
+  ]
+```
+or using the "annotated storage" format as
+```
+ "jmesh_container_nd": {
+       "_ArrayType_": "typename",
+       "_ArraySize_": [N1,N2,N3,...],
+       "_ArrayData_": [v1,v2,v3,...]
+  }
+```
+
+### Structure form
+
+One can also use a JData structure to store the primary data as well as to support 
+additional metadata associated with the container. For example, a structure-based
+container may have the below subfields:
+```
+ "jmesh_container_struct": {
+      "_DataInfo_":{
+          ...
+      },
+      "Data":[
+          ...
+      ],
+      "Properties": [
+          ...
+      ]
+ }
+```
+Here, only the `"Data"` subfield is required, and it must have an array-value that 
+is the same as the "direct storage" form. The optional `"_DataInfo_"` is the JData 
+construct for storing metadata associated with this structure. The other optional 
+`"Properties"` subfield allows one to store additional data attached to this 
+shape/mesh element. The `"Properties"` subfield can be an array or structure with 
+additional subfields.
+
 
 Mesh Data Keywords
 ------------------------
 In this section, we define dedicated JSON `"name"` keywords that can be used to 
-define discretized shapes, or mesh, objects.
+define discretized shapes objects (or meshes).
+
+In most of the cases, the data container keywords defined in this section have a 
+prefix of "Mesh". Many of the keywords ends with a numerical value which typically
+represents the column number of the data when stored in the array format.
+
 
 ### Points
 
-#### MeshPoint1
+For all point data objects, the "Properties" can store the below optional 
+subfields:
+```
+"Norm": [...]
+"Color": [...]
+"Value": [...]
+"Size": [...]
+"Label": [...]
+```
+
+#### MeshVertex1
+`"MeshVertex1"` defines a 1-D position vector. 
 
 ```
-"MeshPoint1": [x1,x2,x3,...]
+"MeshVertex1": [x1,x2,x3,...]
 ```
-#### MeshPoint2
+#### MeshVertex2
+`"MeshVertex2"` defines a 2-D position vector. 
 
 ```
-"MeshPoint2": [
+"MeshVertex2": [
     [x1,y1],
     [x2,y2],
     [x3,y3],
     ...
 ]
 ```
-#### MeshPoint3
+#### MeshVertex3
+`"MeshVertex3"` defines a 3-D position vector. 
 
 ```
-"MeshPoint3": [
+"MeshVertex3": [
     [x1,y1,z1],
     [x2,y2,z2],
     [x3,y3,z3],
@@ -157,10 +230,11 @@ define discretized shapes, or mesh, objects.
 ]
 ```
 
-#### MeshPoint4
+#### MeshVertex4
+`"MeshVertex4"` defines a 4-D position vector. 
 
 ```
-"MeshPoint4": [
+"MeshVertex4": [
     [x1,y1,z1,w1],
     [x2,y2,z2,w2],
     [x3,y3,z3,w3],
@@ -170,13 +244,29 @@ define discretized shapes, or mesh, objects.
 
 ### Line segments and curves
 
+For all line data objects, the "Properties" can store the below optional 
+subfields:
+```
+"Color": []
+"Value": []
+"Size": []
+"Label": []
+```
+
 #### MeshLine
+
+`"MeshLine"` defines a set of line segments using an ordered 1-D list of node indices 
+(starting from 1). If an index is 0, it marks end of the current line segment
+and start a new line segment from the next index.
 
 ```
 "MeshLine": [N1, N2, N3, ... ]
 ```
 
 #### MeshEdge
+
+`"MeshEdge"` defines a set of line segments using a 2-D array with a pair of node indices
+in each row of the array.
 
 ```
 "MeshEdge": [
@@ -189,6 +279,16 @@ define discretized shapes, or mesh, objects.
 
 
 ### Surfaces
+
+For all surface objects, the "Properties" can store the below optional 
+subfields:
+```
+"Color": []
+"Value": []
+"Size": []
+"Label": []
+```
+
 
 #### MeshTri3
 
@@ -214,7 +314,7 @@ define discretized shapes, or mesh, objects.
 #### MeshPoly
 
 ```
-"MeshQuad4": [
+"MeshPoly": [
     [N11, N12, N13, ...],
     [N21, N22, N23, N24, ...],
     [N31, N32, N33, N24, ...],
@@ -223,6 +323,14 @@ define discretized shapes, or mesh, objects.
 ```
 
 ### Solid Elements
+
+For all solid element objects, the "Properties" can store the below optional 
+subfields:
+```
+"Color": []
+"Value": []
+"Label": []
+```
 
 #### MeshTet4
 ```
