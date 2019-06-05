@@ -180,9 +180,9 @@ define discretized shapes, or mesh, objects.
 
 ```
 "MeshEdge": [
-    [N1,N2],
-    [N2,y2],
-    [x3,y3],
+    [N11,N12],
+    [N21,N22],
+    [N31,N32],
     ...
 ]
 ```
@@ -245,7 +245,7 @@ define discretized shapes, or mesh, objects.
 ```
 #### MeshPyramid5
 ```
-"MeshHex8": [
+"MeshPyramid5": [
     [N11, N12, N13, ..., N15],
     [N21, N22, N23, ..., N25],
     [N31, N32, N33, ..., N25],
