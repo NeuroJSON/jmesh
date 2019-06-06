@@ -588,7 +588,7 @@ To facilitate the organization of unstructured graphics data, JMesh supports dat
 such as those defined in the JData specification. 
 
 Here we define the below keywords for grouping of mesh and shape objects: **"MeshGroup", "MeshObject"** 
-and **"MeshPart"**. They are equivallent to the **"_DataGroup_"**, **"_DataSet_"**, and **"_DataRecord_"**
+and **"MeshPart"**. They are equivallent to the **`"_DataGroup_"`**, **`"_DataSet_"`**, and **`"_DataRecord_"`**
 constructs, respectively, as defined in the JData specification, but are specifically applicable to 
 graphics objects. The format of "MeshGroup", "MeshObject" and "MeshPart" are identical to JData data 
 grouping tags, i.e, they can be either an array or structure, with an optional unique name (within 
@@ -688,13 +688,13 @@ The above CSG object can also be written as
     }
     "CSGObject(scene)": [
         {
-	           "CSGUnion":[
-	               {
-		                  "CSGIntersect":["obj1","obj2"]
-		              }, 
-		              "obj3"
-            ]
-	       }
+	      "CSGUnion":[
+	           {
+		       "CSGIntersect":["obj1","obj2"]
+		   }, 
+		   "obj3"
+              ]
+	}
     ]
 ```
 
