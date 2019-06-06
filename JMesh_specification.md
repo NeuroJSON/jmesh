@@ -121,7 +121,7 @@ triangular surfaces, and is not able to encode other shape constructs such as
 tetrahedral or hexahedral solid objects. Similarly, the PLY (Polygon File 
 Format), OFF (Object File Format) and the Wavefront OBJ file formats are 
 also largely limited to triangular surfaces, with various degrees of 
-metadata support such as triangle colors and node/surface norms. While 
+metadata support such as triangle colors and node/surface normals. While 
 parsing and interchanging these simple mesh data formats are 
 straightforward and easy to implement, the limited functionalities and
 lack of the ability to extend for more complex shapes and metadata makes
@@ -261,6 +261,11 @@ prefix of `"Mesh"`. Many of the keywords ends with a numerical value which typic
 represents the column number of the data when stored in the array format.
 
 All indices - integers mapping between data entries - shall have a start value of 1. 
+In the below section, we use notation "`Ni`" (i=1,2,...) to denote integers or node indices,
+`xi,yi,zi` or `xij, yij, zij`  to denote coordinates, `wi` to denote additional coordinate
+(in 4-D) or scaler values (such as weights), `vi` or `vij` to denote numerical values
+associated with the geometric object; `ti`, `tij` or `tijk` to represent texture data in
+various dimensions.
 
 Below is a short summary of the JMesh data annotation/storage keywords to be introduced
 
@@ -290,7 +295,7 @@ A vertex represents a discrete spatial location in the N-dimensional space.
 For all vertex data objects, the "Properties" can store the below optional 
 subfields:
 ```
-"Norm": [...]
+"Normal": [...]
 "Color": [...]
 "Value": [...]
 "Size": [...]
@@ -412,6 +417,7 @@ the weight (`w`) at each control point.
 For all surface objects, the "Properties" can store the below optional 
 subfields:
 ```
+"Normal": [...]
 "Color": []
 "Value": []
 "Size": []
