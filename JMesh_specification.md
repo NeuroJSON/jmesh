@@ -399,12 +399,14 @@ total number of quadrilaterals.
     ...
 ]
 ```
-##### MeshPoly
-`"MeshPoly"` defines a discretized surface made of polygons of uniform or varied edge sizes. 
-It must be defined by an array with elements of integer vectors of equal or varied lengths.
+
+##### MeshPLC
+`"MeshPLC"` defines a discretized surface made of polygons (piecewise linear complex) of 
+uniform or varied edge sizes. It must be defined by an array with elements of integer 
+vectors of equal or varied lengths.
 
 ```
-"MeshPoly": [
+"MeshPLC": [
     [N11, N12, N13, ...],
     [N21, N22, N23, N24, ...],
     [N31, N32, N33, N34, ..., ...],
@@ -543,9 +545,10 @@ property values are application dependent.
 ```
 
 ##### MeshSurf
-`"MeshSurf"` defines a flexible container for the storage of surface patches and the associated 
-properties. It must be defined by an N-by-M array, where N is the number of surface elements, and M is the 
-number of vertices per element (K) plus the number of numerical properties (P) attached along each vertex, i.e.
+`"MeshSurf"` defines a flexible container for the storage of fix-node-length surface patches and 
+the associated properties. It must be defined by an N-by-M array, where N is the number of surface 
+elements, and M is the number of vertices per element (K) plus the number of numerical properties (P) 
+attached along each vertex, i.e.
 
 `M = K + P`
 
@@ -557,6 +560,22 @@ property values are application dependent.
     [N11, N11, ..., N1K, ..., v11, v12, ..., v1P],
     [N21, N21, ..., N2K, ..., v21, v22, ..., v2P],
     [N31, N31, ..., N3K, ..., v31, v32, ..., v3P],
+    ...
+]
+```
+
+##### MeshPoly
+`"MeshPoly"` defines a flexible container for the storage of variable-node-length surface patches and 
+the associated properties. Similar to `"MeshPLC"`, it must be defined by an array with elements of 
+integer vectors, but it can contain additional metadata in each element. For each vector representing
+a surface patch, the first non-numerical entry, for example, a struct or sub-array, of the vector marks 
+the start of the property data.
+
+```
+"MeshPoly": [
+    [N11, N12, N13, ..., {properties}],
+    [N21, N22, N23, N24, ...],
+    [N31, N32, N33, N34, ..., ..., [properties] ],
     ...
 ]
 ```
@@ -682,10 +701,10 @@ The above CSG object can also be written as
     },
     "MeshObject(obj2)":{
         ...
-    }
+    },
     "MeshObject(obj3)": {
         ....
-    }
+    },
     "CSGObject(scene)": [
         {
 	      "CSGUnion":[
