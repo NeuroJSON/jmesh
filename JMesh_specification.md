@@ -8,16 +8,18 @@
 - **Abstract**:
 
 > JMesh is a portable and extensible file format for storage and interchange of
-unstructured mesh and geometric data, including triangular and tetrahedral meshes. 
-Built upon the JData specification, a JMesh file utilizes the JavaScript Object Notation (JSON) 
-[RFC4627] and Universal Binary JSON (UBJSON) constructs to serialize and encode
-mesh data structures, therefore, it can be directly processed by most existing
-JSON and UBJSON parsers. In this specification, we define a list of 
-JData-compatible keywords to encode complex geometric shapes, inluding N-dimensional 
-points, curves, surfaces, solid elements, shape primitives, their interactions and spatial
+unstructured geometric data, including discretized geometries such as triangular 
+and tetrahedral meshes, parametric geometries such as NURBS curves and surfaces, and
+constructive geometries such as constructive solid geometry (CGS) of shape primitives
+and meshes. Built upon the JData specification, a JMesh file utilizes the JavaScript 
+Object Notation (JSON) [RFC4627] and Universal Binary JSON (UBJSON) constructs to 
+serialize and encode geometric data structures, therefore, it can be directly 
+processed by most existing JSON and UBJSON parsers. In this specification, we define 
+a list of JSON-compatible constructs to encode geometric data, inluding N-dimensional 
+vertices, curves, surfaces, solid elements, shape primitives, their interactions and spatial
 relations, together with their associated properties, such as numerical values, 
-gray-scales, colors, and other properties related to scientific research, 3-D 
-fabrication and computer graphics rendering.
+colors, normals, materials, textures and other properties related to graphics data
+manipulation, 3-D fabrication and computer graphics rendering and animations.
 
 
 ## Table of Content
@@ -64,7 +66,7 @@ straightforward and easy to implement, the limited functionalities and
 lack of the ability to extend for more complex shapes and metadata makes
 it difficult to capture other more sophisticated geometries. On the other 
 hand, more capable and flexible shape storage formats are often associated 
-with commercial 3-D CAD software, such as 3DS, FBX, and DWG formats, with 
+with commercial 3-D CAD software, such as 3DS, FBX, and DWG formats, or with 
 relatively large and complex parsers, which are often not widely available.
 
 Due to the great diversity of geometric discretization schemes, the form 
@@ -78,11 +80,11 @@ accepted among the Internet community due to its capability of storing
 complex data, excellent portability and human-readability. The proposals
 and wide adoptions of binary JSON-like format, such as UBJSON and
 MessagePack, also add complementary features such as support for typed 
-data, faster file sizes and processing speed. The JData specification
+data, smaller file sizes and faster processing speed. The JData specification
 provides the foundation for serializing complex hierarchical data using
-JSON/UBJSON constructs. This permits us to define language and library-neutral
-geometry and mesh descriptions using the simple and extensible constructs
-from JSOB and UBJSON formats.
+JSON/UBJSON constructs. This permits us to define language- and library-neutral
+geometry and mesh representations using the simple and extensible constructs
+from JSON and UBJSON syntax. 
 
 
 ### JMesh specification overview
@@ -91,9 +93,9 @@ JMesh is an extensible framework to store complex geometry and mesh related
 data using the JData representation, with a syntax compatible to the widely 
 used JSON and UBJSON file formats. JMesh adds a semantic layer to 
 a JSON structure by attaching meanings and format specifications to a list of 
-reserved "name" fields (or simply, JMesh keywords). These JMesh keywords allow
-one to unambiguously store vertices, edges, surfaces and tetrahedral meshes
-of 1-D, 2-D, 3-D or even higher dimensions.
+reserved `"name"` fields (or simply, JMesh keywords). These JMesh keywords allow
+one to unambiguously store vertices, edges, surfaces and tetrahedral meshes,
+shape and parametric objects of 1-D, 2-D, 3-D or even higher dimensions.
 
 The purpose of this document is to define the text and binary JMesh format 
 specifications. This is achieved through the definition of a semantic layer 
@@ -103,11 +105,13 @@ geometrical data. Such semantic layer includes
 - a list of dedicated `"name"` fields, or keywords, that define the containers 
   of various nodes, elements, and shape primitives
 - a list of dedicated `"name"` fields and formats to facilitate the spatial
-  organization, grouping and interaction of geometric objects
-- a list of metadata keywords for enriched data annotation
+  organization, grouping and interaction of geometric objects, 
+  and timelines for dynamic shapes and animations
+- a list of metadata keywords for enriched data annotation, including colors,
+  materials, textures and other user-defined auxillary data
 
 In the following sections, we will clarify the basic JMesh grammar and define 
-mesh data container formats to encode a wide-range of unstructured mesh and
+geometric data container formats to encode a wide-range of unstructured mesh and
 shape data types, including vertices, lines, contours, shape primitives, 
 triangular surfaces, tetrahedral meshes, and other surface and solid elements
 In addition, we will define a set of structures to represent the interactions
@@ -195,10 +199,11 @@ In most of the cases, the data container keywords defined in this section have a
 prefix of `"Mesh"`. Many of the keywords ends with a numerical value which typically
 represents the column number of the data when stored in the array format.
 
-All indices - integers mapping between data entries - shall have a start value of 
-1. 
+All indices - integers mapping between data entries - shall have a start value of 1. 
 
-### Vertices
+### Discrete and parametric graphics
+
+#### Vertices
 
 A vertex represents a discrete spatial location in the N-dimensional space.
 
@@ -212,7 +217,7 @@ subfields:
 "Label": [...]
 ```
 
-#### MeshVertex1
+##### MeshVertex1
 `"MeshVertex1"` defines a 1-D position vector. It must be defined as an N-by-1 or
 1-by-N numerical vector, where N equals to the total number of vertices. The values
 in this vector shall be the coordinates of the 1-D vertices.
@@ -230,7 +235,7 @@ or
 ]
 ```
 
-#### MeshVertex2
+##### MeshVertex2
 `"MeshVertex2"` defines a 2-D position vector. It must be defined as an N-by-2 
 numerical array where N is the total number of vertices. Each row of this array
 contains the coordinates of the vertex.
@@ -243,7 +248,7 @@ contains the coordinates of the vertex.
     ...
 ]
 ```
-#### MeshVertex3
+##### MeshVertex3
 `"MeshVertex3"` defines a 3-D position vector. Similar to MeshVertex2, it must 
 be defined as an N-by-3 numerical array.
 
@@ -256,7 +261,7 @@ be defined as an N-by-3 numerical array.
 ]
 ```
 
-#### MeshVertex4
+##### MeshVertex4
 `"MeshVertex4"` defines a 4-D position vector. Similar to MeshVertex2, it must 
 be defined as an N-by-4 numerical array.
 
@@ -269,7 +274,7 @@ be defined as an N-by-4 numerical array.
 ]
 ```
 
-### Line segments and curves
+#### Line segments and curves
 
 For all line data objects, the "Properties" can store the below optional 
 subfields:
@@ -280,7 +285,7 @@ subfields:
 "Label": []
 ```
 
-#### MeshLine
+##### MeshLine
 
 `"MeshLine"` defines a set of line segments using an ordered 1-D list of node indices 
 (starting from 1). It must be defined by an 1-by-N or N-by-1 vector of integers. 
@@ -291,7 +296,7 @@ segment from the next index.
 "MeshLine": [N1, N2, N3, ... ]
 ```
 
-#### MeshEdge
+##### MeshEdge
 
 `"MeshEdge"` defines a set of line segments using a 2-D array with a pair of node indices
 in each row of the array. It must be defined by an N-by-2 integer array, where N is the
@@ -306,8 +311,23 @@ total number of edges.
 ]
 ```
 
+##### MeshBSpline2D
 
-### Surfaces
+`"MeshBSpline2D"` defines a 2-dimensional B-spline curve. It must be defined by an N-by-3 
+numerical array, where N is the total number of edges. The first 2 columns must be the
+2-D coordinates (`x`,`y`) of the control points of the B-spline, and the 3rd column defines 
+the weight (`w`) at each control point.
+
+```
+"MeshBSpline2D": [
+    [x1,y1,w1],
+    [x2,y2,w2],
+    [x3,y3,w3],
+    ...
+]
+```
+
+#### Surfaces
 
 For all surface objects, the "Properties" can store the below optional 
 subfields:
@@ -319,7 +339,7 @@ subfields:
 ```
 
 
-#### MeshTri3
+##### MeshTri3
 `"MeshTri3"` defines a discretized surface made of triangles with a triplet of node indices
 in each row of the array. It must be defined by an N-by-3 integer array, where N is the 
 total number of triangles.
@@ -333,7 +353,7 @@ total number of triangles.
 ]
 ```
 
-#### MeshQuad4
+##### MeshQuad4
 `"MeshQuad4"` defines a discretized surface made of quadrilateral with a quadruplet of node indices
 in each row of the array. It must be defined by an N-by-4 integer array, where N is the 
 total number of quadrilaterals.
@@ -346,7 +366,7 @@ total number of quadrilaterals.
     ...
 ]
 ```
-#### MeshPoly
+##### MeshPoly
 `"MeshPoly"` defines a discretized surface made of polygons of uniform or varied edge sizes. 
 It must be defined by an array with elements of integer vectors of equal or varied lengths.
 
@@ -359,7 +379,40 @@ It must be defined by an array with elements of integer vectors of equal or vari
 ]
 ```
 
-### Solid Elements
+##### MeshNURBS
+
+`"MeshNURBS"` defines a 3-dimensional nonuniform rational B-spline surface (NIRBS). 
+It must be defined by an Nx-by-Ny-by-4 3-D numerical array, where Nx is the number 
+of control points along one of the directions and Ny is the number of control points
+along the other direction. The first 3 planes of the last dimension must be the
+3-D coordinates (`x`,`y`,`z`) of the control points of the NURBS, and the last plane 
+defines the weight (`w`) at each control point.
+
+```
+"MeshNURBS": [
+  [
+    [
+      [x11,y11,z11,w11],
+      [x12,y12,z12,w12],
+      [x13,y13,z13,w13],
+       ...
+    ],
+    [
+      [x21,y21,z21,w21],
+      [x22,y22,z22,w22],
+      [x23,y23,z23,w23],
+       ...
+    ],
+    ...
+  ],
+  [
+     ...
+  ],
+  ...
+]
+```
+
+#### Solid Elements
 
 For all solid element objects, the "Properties" can store the below optional 
 subfields:
@@ -369,7 +422,7 @@ subfields:
 "Label": []
 ```
 
-#### MeshTet4
+##### MeshTet4
 `"MeshTet4"` defines a discretized volumetric domain made of tetrahedral elements, with each
 element made of a quadruplet of node indices. It must be defined by an N-by-4 integer array, where 
 N is the total number of tetrahedra.
@@ -382,7 +435,7 @@ N is the total number of tetrahedra.
 ]
 ```
 
-#### MeshHex8
+##### MeshHex8
 `"MeshHex8"` defines a discretized volumetric domain made of 8-node hexahedral elements, with each
 element specified by a 8-tuple node index. It must be defined by an N-by-8 integer array, where 
 N is the total number of hexahedra.
@@ -394,7 +447,7 @@ N is the total number of hexahedra.
     ...
 ]
 ```
-#### MeshPyramid5
+##### MeshPyramid5
 `"MeshHex8"` defines a discretized volumetric domain made of 5-node pyramid elements, with each
 element specified by a 5-tuple node index. It must be defined by an N-by-5 integer array, where 
 N is the total number of pyramid.
@@ -407,7 +460,7 @@ N is the total number of pyramid.
 ]
 ```
 
-#### MeshTet10
+##### MeshTet10
 `"MeshTet10"` defines a discretized volumetric domain made of 10-node straightline tetrahedral 
 elements, with each element specified by a 10-tuple node index. It must be defined by an 
 N-by-10 integer array, where N is the total number of 10-node tetrahedra. 
@@ -433,11 +486,11 @@ where `N12` is the global index of the node located at the middle of the edge be
 
 
 
-### Flexible mesh data containers
+#### Flexible mesh data containers
 
 Flexible mesh data containers allows one to encode a wide range of mesh data using a simple 2-D array.
 
-#### MeshNode
+##### MeshNode
 `"MeshNode"` defines a flexible container for the storage of vertex coordinates and the associated 
 properties. It must be defined by an N-by-M array, where N is the number of vertices, and M is the 
 number of coordinates (D) plus the number of numerical properties (P) attached along each vertex, i.e.
@@ -456,7 +509,7 @@ property values are application dependent.
 ]
 ```
 
-#### MeshSurf
+##### MeshSurf
 `"MeshSurf"` defines a flexible container for the storage of surface patches and the associated 
 properties. It must be defined by an N-by-M array, where N is the number of surface elements, and M is the 
 number of vertices per element (K) plus the number of numerical properties (P) attached along each vertex, i.e.
@@ -475,7 +528,7 @@ property values are application dependent.
 ]
 ```
 
-#### MeshElem
+##### MeshElem
 `"MeshElem"` defines a flexible container for the storage of volumetric elements and the associated 
 properties. It must be defined by an N-by-M array, where N is the number of surface elements, and M is the 
 number of vertices per element (K) plus the number of numerical properties (P) attached along each vertex, i.e.
@@ -494,6 +547,187 @@ property values are application dependent.
 ]
 ```
 
+### Grouping and constructive graphics
+
+#### Mesh grouping and partitioning
+
+To facilitate the organization of unstructured graphics data, JMesh supports data grouping mechanisms
+such as those defined in the JData specification. 
+
+Here we define the below keywords for grouping of mesh and shape objects: **"MeshGroup", "MeshObject"** 
+and **"MeshPart"**. They are equivallent to the **"_DataGroup_"**, **"_DataSet_"**, and **"_DataRecord_"**
+constructs, respectively, as defined in the JData specification, but are specifically applicable to 
+graphics objects. The format of "MeshGroup", "MeshObject" and "MeshPart" are identical to JData data 
+grouping tags, i.e, they can be either an array or structure, with an optional unique name (within 
+the current document) via `"MeshGroup(unique name)"`, `"MeshObject(unique name)"`, and 
+`"MeshPart(unique name)"`.
+
+For example, the below JMesh snippet defines two mesh objects as a group
+
+```
+{
+    "MeshGroup(scene)": [
+       {
+           "MeshObject(box)": {
+               "MeshVertex3":[
+                   ...
+               ],
+               "MeshTri3":{
+                   "Data": [
+                       ...
+                   ],
+                   "Properties": {
+                       "Value": [
+                          ...
+                       ]
+                   }
+               }
+           }
+       },
+       {
+           "MeshObject(sphere)": {
+               "MeshVertex3":[
+                   ...
+               ],
+               "MeshTri3":[
+                   ...
+               ]
+           }
+       }
+    ]
+}
+```
+
+#### Constructive solid graphics (CSG)
+
+Constructive solid graphics allows one to combine simple graphics into complex graphical 
+objects via a sequence of Boolean operations. It is typically represented by a tree-like
+data/operator data structure. Such data structure is represented in JMesh using the below
+construct
+
+* **"CSGObject": [root]**: the root of a CSG object, an array containing a single mesh object 
+  or empty, an optional name can be added as "CGSObject(name)",
+* **"CSGUnion": [obj1, obj2]**: the union operator of the two objects, "obj1" and "obj2", 
+  must be defined as an array of 2 non-empty elements (3 if `{"_DataInfo_":...}` presents)
+* **"CSGIntersect": [obj1, obj2]**: the intersection operator of the two objects, "obj1" and "obj2", 
+  must be defined as an array of 2 non-empty elements (3 if `{"_DataInfo_":...}` presents)
+* **"CSGSubtract": [obj1, obj2]**: the subtraction of obj2 from obj1, i.e. "obj1 - obj2"
+  must be defined as an array of 2 non-empty elements (3 if `{"_DataInfo_":...}` presents).
+
+If either (or both) of the operand, "obj1" or "obj2", is a string, it must be treated as a unique 
+name, with which one must locate and retrieve the operand within this current document before 
+performing the CSG operation.
+
+For example, the below CSG tree represents the CSG object `"scene"= ("obj1" ∩ "obj2") ∪ "obj3"`
+```
+    "CSGObject(scene)": [
+        {
+            "CSGUnion": [
+                {
+                    "CSGIntersect":[
+                        "MeshObject(obj1)":{
+                            ...
+                        },
+                        "MeshObject(obj2)":{
+                            ...
+                        }
+                     ]
+                },
+                {
+                    "MeshObject(obj3)": {
+                        ....
+                    }
+                }
+            ]
+        }
+    }
+```
+The above CSG object can also be written as
+```
+    "MeshObject(obj1)":{
+        ...
+    },
+    "MeshObject(obj2)":{
+        ...
+    }
+    "MeshObject(obj3)": {
+        ....
+    }
+    "CSGObject(scene)": [
+        {
+	           "CSGUnion":[
+	               {
+		                  "CSGIntersect":["obj1","obj2"]
+		              }, 
+		              "obj3"
+            ]
+	       }
+    ]
+```
+
+### Textures
+
+JMesh permits the definition and binding of textures (rasterized color or intensity values) with any 
+mesh or shape objects. The texture data shall be defined using an N-D array using JData array constructs.
+
+#### Texture1D
+
+A 1-D texture can be defined as an N-by-1 or 1-by-N 1-D numeical array or N-by-C 2-D numeical array, 
+where N is the number of pixels/voxels of the texture, and C is the number of color components (RGB, RGBA, etc)
+
+```
+"Texture1D": [t1,t2,t3,...,tN]
+```
+or
+
+```
+"Texture1D": [
+   [R1,G1,B1,A1],
+   [R2,G2,B2,A2],
+   [R3,G3,B3,A3],
+   ...
+]
+```
+
+#### Texture2D
+
+A 2-D texture can be defined as an Nx-by-Ny 2-D numeical array or Nx-by-Ny-by-C 3-D numeical array, 
+where Nx and Ny are the number of pixels/voxels of the texture along x/y directions, and C is 
+the number of color components (3 for RGB, 4 for RGBA, etc). Please be aware that the "annotated 
+format" for array syntax can be used interchangably with the direct form.
+
+```
+"Texture2D": [
+    [t11,t12,t13,...,t1Ny],
+    [t21,t22,t23,...,t2Ny],
+    ...
+    [tNx1,tNx2,tNx3,...,t1NxNy]
+]
+```
+or
+```
+"Texture2D": [
+   [ [R11,G11,B11,A11], [R12,G12,B12,A12], [R13,G13,B13,A13], ... ], 
+   [ [R21,G21,B21,A21], [R22,G22,B22,A22], [R23,G23,B23,A23], ... ], 
+   ...
+]
+```
+
+
+#### Texture3D
+
+A 3-D texture can be defined as an Nx-by-Ny-by-Nz 3-D numeical array or Nx-by-Ny-by-Nz-by-C 
+4-D numeical array, where Nx, Ny and Nz are the number of pixels/voxels of the texture along
+the x/y/z direction, respectively, and C is the number of color components (3 for RGB, 4 for 
+RGBA, etc).
+
+```
+"Texture3D": [
+   [ [t111,t112,t113,...,t11Nz], [t121,t122,t123,...,t12Nz], ... ], 
+   [ [t211,t212,t213,...,t21Nz], [t221,t222,t223,...,t22Nz], ... ], 
+   ...
+]
+```
 
 
 Recommended File Specifiers
