@@ -44,7 +44,7 @@ manipulation, 3-D fabrication and computer graphics rendering and animations.
     + [Surfaces](#surfaces)
       - [MeshTri3](#meshtri3)
       - [MeshQuad4](#meshquad4)
-      - [MeshPoly](#meshpoly)
+      - [MeshPLC](#meshplc)
       - [MeshNURBS](#meshnurbs)
     + [Solid Elements](#solid-elements)
       - [MeshTet4](#meshtet4)
@@ -54,14 +54,42 @@ manipulation, 3-D fabrication and computer graphics rendering and animations.
     + [Flexible mesh data containers](#flexible-mesh-data-containers)
       - [MeshNode](#meshnode)
       - [MeshSurf](#meshsurf)
+      - [MeshPoly](#meshpoly)
       - [MeshElem](#meshelem)
-  * [Grouping and constructive graphics](#grouping-and-constructive-graphics)
+  * [Constructive graphics and grouping](#constructive-graphics-and-grouping)
     + [Mesh grouping and partitioning](#mesh-grouping-and-partitioning)
     + [Constructive solid graphics (CSG)](#constructive-solid-graphics--csg-)
   * [Textures](#textures)
     + [Texture1D](#texture1d)
     + [Texture2D](#texture2d)
     + [Texture3D](#texture3d)
+  * [Shape primitives](#shape-primitives)
+    + [2-D shapes](#2-d-shapes)
+      - [ShapeBox2](#shapebox2)
+      - [ShapeDisc2](#shapedisc2)
+      - [ShapeEllipse](#shapeellipse)
+      - [ShapeLine2](#shapeline2)
+      - [ShapeArrow2](#shapearrow2)
+      - [ShapeAnnulus](#shapeannulus)
+      - [ShapeGrid2](#shapegrid2)
+    + [3-D shapes](#3-d-shapes)
+      - [ShapeLine3](#shapeline3)
+      - [ShapePlane3](#shapeplane3)
+      - [ShapeBox3](#shapebox3)
+      - [ShapeDisc3](#shapedisc3)
+      - [ShapeGrid3](#shapegrid3)
+      - [ShapeSphere](#shapesphere)
+      - [ShapeCylinder](#shapecylinder)
+      - [ShapeEllipsoid](#shapeellipsoid)
+      - [ShapeTorus](#shapetorus)
+      - [ShapeCone](#shapecone)
+      - [ShapeConeFrustum](#shapeconefrustum)
+      - [ShapeSphereShell](#shapesphereshell)
+      - [ShapeSphereSegment](#shapespheresegment)
+    + [Shapes from transformation](#shapes-from-transformation)
+      - [ShapeExtrude2D](#shapeextrude2d)
+      - [ShapeExtrude3D](#shapeextrude3d)
+      - [ShapeRevolve3D](#shaperevolve3d)
 - [Recommended File Specifiers](#recommended-file-specifiers)
 - [Summary](#summary)
 
@@ -244,6 +272,12 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
 * **Flexible containers**: `MeshNode`,`MeshSurf`,`MeshPoly`,`MeshElem`
 * **CSG operators**: `CSGObject`,`CSGUnion`,`CSGIntersect`,`CSGSubtract`
 * **Texture**: `Texture1D`,`Texture2D`,`Texture3D`
+* **2-D shape primitives**: `ShapeBox2`,`ShapeDisc2`,`ShapeEllipse`,`ShapeLine2`,
+  `ShapeArrow2`,`ShapeAnnulus`,`ShapeGrid2`
+* **3-D shape primitives**: `ShapeLine3`,`ShapePlane3`,`ShapeBox3`,`ShapeDisc3`,
+  `ShapeGrid3`,`ShapeSphere`,`ShapeCylinder`,`ShapeEllipsoid`,`ShapeTorus`,`ShapeCone`,
+  `ShapeConeFrustum`,`ShapeSphereShell`,`ShapeSphereSegment`
+* **Extrusion and revolving**: `ShapeExtrude2D`,`ShapeExtrude3D`,`ShapeRevolve3D`
 * **Properties**: `Color`,`Normal`,`Size`,`Label`,`Value`
 
 
@@ -612,7 +646,7 @@ property values are application dependent.
 ]
 ```
 
-### Grouping and constructive graphics
+### Constructive graphics and grouping
 
 #### Mesh grouping and partitioning
 
@@ -794,6 +828,206 @@ RGBA, etc).
 ]
 ```
 
+### Shape primitives
+
+All shape primitive objects (a struture) supports an optional parameter `"Segment": [...]`, defining
+the number of steps for the discretization of the shape components (lines, curves, surfaces).
+
+For 1-D manifold (line objects), `Segment` contains a single integer; for 2-D manifold, it contains
+two integers to specify the segments along the two axes spanning the surface; for 3-D manifolds, it
+contains 3 integers.
+
+#### 2-D shapes
+
+##### ShapeBox2
+
+A 2-D axis-aligned-bounding-box (AABB) defined by the two diagonal points (`"O"` as one end and `"P"` as the other end)
+
+`"ShapeBox2": {"O":[x0,y0], "P": [x1,y1]}`
+
+##### ShapeDisc2
+
+A 2-D disc defined by the center (`"O"`) and radius `"r"`
+
+`"ShapeDisc2": {"O":[x0,y0], "R": r}`
+
+##### ShapeEllipse
+
+A 2-D ellipse defined by the center (`"O"`), x and y axes in the un-rotated coordinate system (`"rx"` and `"ry"`), and rotation angle `"theta0"`
+
+`"ShapeEllipse": {"O":[x0,y0], "R": [r1,r2], "Angle":theta0}`
+
+##### ShapeLine2
+
+A 2-D line defined by one point along the line (`"O"`), and a 2-D vector (`"V"`) aligns with the direction of the line
+
+`"ShapeLine2": {"O":[x0,y0], "V": [v1,v2]}`
+
+##### ShapeArrow2
+
+A 2-D arrow object defined by one point along the line (`"O"`), and a 2-D vector (`"V"`)  aligns with 
+the direction of the line, and the arrow-head size is indicated by scalar "s"
+
+`"ShapeArrow2": {"O":[x0,y0], "V": [v1,v2], "Size": s}`
+
+##### ShapeAnnulus
+
+A 2-D annulus defined by the center (`"O"`), and the outer radius (`r1`) and inner radius (`r2`)
+
+`"ShapeAnnulus": {"O":[x0,y0], "R": [r1,r2]}`
+
+##### ShapeGrid2
+
+A 2-D grid defined by the one end of the diagonal line (`"O"`), and the other end (`"P"`); the numbers of
+segments along the first and 2nd coordinates are indicated by `"Nx"` and `"Ny"`, respectively
+
+`"ShapeGrid2": {"O":[x0,y0], "P": [x1,y1], "Step":[Nx,Ny]}`
+
+#### 3-D shapes
+
+##### ShapeLine3
+
+A 3-D line defined by one point along the line (`"O"`), and a 3-D vector (`"V"`) aligns with 
+the direction of the line
+
+`"ShapeLine3": {"O":[x0,y0,z0], "V": [v1,v2,v3]}`
+
+##### ShapePlane3
+
+A 3-D plane defined by one point along the line (`"O"`), and a 3-D vector (`"N"`) pointing to the 
+normal direction of the plane
+
+`"ShapePlane3": {"O":[x0,y0,z0], "N": [v1,v2,v3]}`
+
+##### ShapeBox3
+
+A 3-D axis-aligned-bounding-box (AABB) defined by the two diagonal points (`"O"` as one end and `"P"` as the other end)
+
+`"ShapeBox3": {"O":[x0,y0,z0], "P": [x1,y1,z1]}`
+
+##### ShapeDisc3
+
+A 2-D disc defined by the center (`"O"`) and radius `"R"`; the normal direction of the disc is specified in `"N"`
+
+`"ShapeDisc3": {"O":[x0,y0,z0], "R": r, "N"=[v1,v2,v3]}`
+
+##### ShapeGrid3
+
+A 3-D grid defined by the one end of the diagonal line (`"O"`), and the other end (`"P"`); the numbers of
+segments along the x/y/z coordinates are indicated by `"Nx"`, `"Ny"` and `"Nz"`, respectively
+
+`"ShapeGrid3": {"O":[x0,y0,z0], "P": [x1,y1,z1], "Step":[Nx,Ny,Nz]}`
+
+##### ShapeSphere
+
+A 3-D sphere defined by the center (`"O"`) and radius `"r"`
+
+`"ShapePlane3": {"O":[x0,y0,z0], "R": r}`
+
+##### ShapeCylinder
+
+A 3-D cylinder defined by one end of the cylindrical axis (`"O"`) and the other end of the axis `"P"`;
+the radius of the cylinder is specified in `"r"`
+
+`"ShapePlane3": {"O":[x0,y0,z0], "P":[x1,y1,z1], "R": r}`
+
+##### ShapeEllipsoid
+
+A 3-D ellipsoid defined by the center position (`"O"`), x, y and z axes in the pre-rotated coordinate system
+(`rx, ry, rz`), and the arzimuthal rotation angle `theta0` and zenith rotation angle `phi0`
+
+`"ShapeEllipsoid": {"O":[x0,y0,z0], "R": [rx,ry,rz], "Angle":[theta0, phi0]}`
+
+##### ShapeTorus
+
+A 3-D torus defined by the center of the torus (`"O"`), the radius of the torus (`r1`) and the tube radius 
+(`r2`) and the normal direction vector `"N"`
+
+`"ShapeTorus": {"O":[x0,y0,z0], "R": r1, "Rtube": r2, "N":[v1,v2,v3]}`
+
+##### ShapeCone
+
+A 3-D cone defined by the center of the bottom circle of the cone (`"O"`), the radius of the bottom 
+circle (`r`) and the tip position `"P"`
+
+`"ShapeCone": {"O":[x0,y0,z0], "P": [x1,y1,z1], "R": r}`
+
+##### ShapeConeFrustum
+
+A 3-D cornical frustum defined by the center of the bottom circle of the frustum (`"O"`), the center of
+the top circle of the frustum and the radii of the bottom and top circles (`r1` and `r2` respectively)
+
+`"ShapeConeFrustum": {"O":[x0,y0,z0], "P": [x1,y1,z1], "R": [r1, r2]}`
+
+##### ShapeSphereShell
+
+A 3-D spherical shell defined by the center of the shell (`"O"`), the outer radius `r1` and the inner
+radius `r2`
+
+`"ShapeSphereShell": {"O":[x0,y0,z0], "R": [r1, r2]}`
+
+##### ShapeSphereSegment
+
+A 3-D spherical segment defined by the center of the sphere (`"O"`), the radius of the sphere 
+the normal direction of the bottom/top plane `"N"` and the height of the segment `h1` for the 
+starting plane, and `h2` at the ending plane
+
+`"ShapeSphereSegment": {"O":[x0,y0,z0], "R": r, "N": [v1,v2,v3], "Height": [h1, h2]}`
+
+#### Shapes from transformation
+
+JMesh supports mesh constructs created via transformations, such as extrusion or revolution. 
+These operators requires two curve objects as operands, one as the "source", the other as the 
+guide (in extrusion) or axis (when revolving). The permitted curve objects can be found in the
+"Line segments and curves" section, i.e. "MeshLine", "MeshEdge", and "MeshBSpline2D".
+
+##### ShapeExtrude2D
+
+A 2-D surface generated by extruding a 2-D curve object "source_curve" along another 2-D curve 
+object "guide_curve" defined within the same plane.
+
+```
+"ShapeExtrude2D": {
+    "source_curve": [
+        ...
+    ],
+    "guide_curve": [
+        ...
+    ]
+}
+```
+
+##### ShapeExtrude3D
+
+A 3-D surface generated by extruding a 3-D curve object "source_curve" along another 3-D curve 
+object "guide_curve".
+
+```
+"ShapeExtrude3D": {
+    "source_curve": [
+        ...
+    ],
+    "guide_curve": [
+        ...
+    ]
+}
+```
+
+##### ShapeRevolve3D
+
+A 3-D surface generated by revolving a 3-D curve object "source_curve" using a straightline 
+object as the rotation axis defined using the `"ShapeLine3"` keyword
+
+```
+"ShapeRevolve3D": {
+    "source_curve": [
+        ...
+    ],
+    "ShapeLine3": {
+        ...
+    }
+}
+```
 
 Recommended File Specifiers
 ------------------------------
