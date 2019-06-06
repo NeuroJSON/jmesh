@@ -234,6 +234,19 @@ represents the column number of the data when stored in the array format.
 
 All indices - integers mapping between data entries - shall have a start value of 1. 
 
+Below is a short summary of the JMesh data annotation/storage keywords to be introduced
+
+* **Mesh grouping**: `MeshGroup`, `MeshObject`, `MeshPart`
+* **Vertices**: `MeshVertex1`,`MeshVertex2`,`MeshVertex3`,`MeshVertex4`
+* **Lines**: `MeshLine`,`MeshEdge`,`MeshBSpline2D`
+* **Surfaces**: `MeshTri3`,`MeshQuad4`,`MeshPLC`,`MeshNURBS`
+* **Solid**: `MeshTet4`,`MeshHex8`,`MeshPyramid5`,`MeshTet10`
+* **Flexible containers**: `MeshNode`,`MeshSurf`,`MeshPoly`,`MeshElem`
+* **CSG operators**: `CSGObject`,`CSGUnion`,`CSGIntersect`,`CSGSubtract`
+* **Texture**: `Texture1D`,`Texture2D`,`Texture3D`
+* **Properties**: `Color`,`Normal`,`Size`,`Label`,`Value`
+
+
 ### Discrete and parametric graphics
 
 #### Vertices
