@@ -1,4 +1,4 @@
- JMesh - A versatile JSON data format for unstructured meshes and geometries
+JMesh - A versatile JSON data format for unstructured meshes and geometries
 ============================================================
 
 - **Status of this document**: This document is current under development.
@@ -15,7 +15,7 @@ and meshes. Built upon the JData specification, a JMesh file utilizes the JavaSc
 Object Notation (JSON) [RFC4627] and Universal Binary JSON (UBJSON) constructs to 
 serialize and encode geometric data structures, therefore, it can be directly 
 processed by most existing JSON and UBJSON parsers. In this specification, we define 
-a list of JSON-compatible constructs to encode geometric data, inluding N-dimensional 
+a list of JSON-compatible constructs to encode geometric data, including N-dimensional 
 vertices, curves, surfaces, solid elements, shape primitives, their interactions and spatial
 relations, together with their associated properties, such as numerical values, 
 colors, normals, materials, textures and other properties related to graphics data
@@ -169,7 +169,7 @@ geometrical data. Such semantic layer includes
   organization, grouping and interaction of geometric objects, 
   and timelines for dynamic shapes and animations
 - a list of metadata keywords for enriched data annotation, including colors,
-  materials, textures and other user-defined auxillary data
+  materials, textures and other user-defined auxiliary data
 
 In the following sections, we will clarify the basic JMesh grammar and define 
 geometric data container formats to encode a wide-range of unstructured mesh and
@@ -221,7 +221,7 @@ or using the "annotated storage" format as
        "_ArrayData_": [v1,v2,v3,...]
   }
 ```
-The direct storage format and the annotated storage format are equivallent. In the 
+The direct storage format and the annotated storage format are equivalent. In the 
 below sections, we use mostly the direct format to explain the data format, but
 one shall also store the data using the annotated format.
 
@@ -469,7 +469,7 @@ vectors of equal or varied lengths.
 
 ##### MeshNURBS
 
-`"MeshNURBS"` defines a 3-dimensional nonuniform rational B-spline surface (NIRBS). 
+`"MeshNURBS"` defines a 3-dimensional non-uniform rational B-spline surface (NIRBS). 
 It must be defined by an Nx-by-Ny-by-4 3-D numerical array, where Nx is the number 
 of control points along one of the directions and Ny is the number of control points
 along the other direction. The first 3 planes of the last dimension must be the
@@ -549,7 +549,7 @@ N is the total number of pyramid.
 ```
 
 ##### MeshTet10
-`"MeshTet10"` defines a discretized volumetric domain made of 10-node straightline tetrahedral 
+`"MeshTet10"` defines a discretized volumetric domain made of 10-node straight-line tetrahedral 
 elements, with each element specified by a 10-tuple node index. It must be defined by an 
 N-by-10 integer array, where N is the total number of 10-node tetrahedra. 
 
@@ -605,7 +605,7 @@ attached along each vertex, i.e.
 
 `M = K + P`
 
-The partition of `M` (into `K` and `P` columns) and the interpreations of the numerical 
+The partition of `M` (into `K` and `P` columns) and the interpretations of the numerical 
 property values are application dependent.
 
 ```
@@ -621,7 +621,7 @@ property values are application dependent.
 `"MeshPoly"` defines a flexible container for the storage of variable-node-length surface patches and 
 the associated properties. Similar to `"MeshPLC"`, it must be defined by an array with elements of 
 integer vectors, but it can contain additional metadata in each element. For each vector representing
-a surface patch, the first non-numerical entry, for example, a struct or sub-array, of the vector marks 
+a surface patch, the first non-numerical entry, for example, a structure or sub-array, of the vector marks 
 the start of the property data.
 
 ```
@@ -640,7 +640,7 @@ number of vertices per element (K) plus the number of numerical properties (P) a
 
 `M = K + P`
 
-The partition of `M` (into `K` and `P` columns) and the interpreations of the numerical 
+The partition of `M` (into `K` and `P` columns) and the interpretations of the numerical 
 property values are application dependent.
 
 ```
@@ -777,7 +777,7 @@ mesh or shape objects. The texture data shall be defined using an N-D array usin
 
 #### Texture1D
 
-A 1-D texture can be defined as an N-by-1 or 1-by-N 1-D numeical array or N-by-C 2-D numeical array, 
+A 1-D texture can be defined as an N-by-1 or 1-by-N 1-D numerical array or N-by-C 2-D numerical array, 
 where N is the number of pixels/voxels of the texture, and C is the number of color components (RGB, RGBA, etc)
 
 ```
@@ -796,10 +796,10 @@ or
 
 #### Texture2D
 
-A 2-D texture can be defined as an Nx-by-Ny 2-D numeical array or Nx-by-Ny-by-C 3-D numeical array, 
+A 2-D texture can be defined as an Nx-by-Ny 2-D numerical array or Nx-by-Ny-by-C 3-D numerical array, 
 where Nx and Ny are the number of pixels/voxels of the texture along x/y directions, and C is 
 the number of color components (3 for RGB, 4 for RGBA, etc). Please be aware that the "annotated 
-format" for array syntax can be used interchangably with the direct form.
+format" for array syntax can be used interchangeably with the direct form.
 
 ```
 "Texture2D": [
@@ -821,8 +821,8 @@ or
 
 #### Texture3D
 
-A 3-D texture can be defined as an Nx-by-Ny-by-Nz 3-D numeical array or Nx-by-Ny-by-Nz-by-C 
-4-D numeical array, where Nx, Ny and Nz are the number of pixels/voxels of the texture along
+A 3-D texture can be defined as an Nx-by-Ny-by-Nz 3-D numerical array or Nx-by-Ny-by-Nz-by-C 
+4-D numerical array, where Nx, Ny and Nz are the number of pixels/voxels of the texture along
 the x/y/z direction, respectively, and C is the number of color components (3 for RGB, 4 for 
 RGBA, etc).
 
@@ -836,7 +836,7 @@ RGBA, etc).
 
 ### Shape primitives
 
-All shape primitive objects (a struture) supports an optional parameter `"Segment": [...]`, defining
+All shape primitive objects (a structure) supports an optional parameter `"Segment": [...]`, defining
 the number of steps for the discretization of the shape components (lines, curves, surfaces).
 
 For 1-D manifold (line objects), `Segment` contains a single integer; for 2-D manifold, it contains
@@ -940,7 +940,7 @@ the radius of the cylinder is specified in `"r"`
 ##### ShapeEllipsoid
 
 A 3-D ellipsoid defined by the center position (`"O"`), x, y and z axes in the pre-rotated coordinate system
-(`rx, ry, rz`), and the arzimuthal rotation angle `theta0` and zenith rotation angle `phi0`
+(`rx, ry, rz`), and the azimuthal rotation angle `theta0` and zenith rotation angle `phi0`
 
 `"ShapeEllipsoid": {"O":[x0,y0,z0], "R": [rx,ry,rz], "Angle":[theta0, phi0]}`
 
@@ -960,7 +960,7 @@ circle (`r`) and the tip position `"P"`
 
 ##### ShapeConeFrustum
 
-A 3-D cornical frustum defined by the center of the bottom circle of the frustum (`"O"`), the center of
+A 3-D conical frustum defined by the center of the bottom circle of the frustum (`"O"`), the center of
 the top circle of the frustum and the radii of the bottom and top circles (`r1` and `r2` respectively)
 
 `"ShapeConeFrustum": {"O":[x0,y0,z0], "P": [x1,y1,z1], "R": [r1, r2]}`
