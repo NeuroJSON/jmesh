@@ -300,15 +300,63 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
 
 ### Common geometry properties
 
-As mentioned above, if a For all vertex data objects, the `"Properties"` can store the below optional 
-subfields:
-```
-"Normal": [...]
-"Color": [...]
-"Value": [...]
-"Size": [...]
-"Tag": [...]
-```
+If a JMesh container is a structure, it can contain an optional element named `"Properties"`.
+In this section, we define a set of common properties and their formats that are shared among
+many JMesh keywords. 
+
+#### Normal
+The `Normal` property defines the normal vector(s) or orientation of a line or surface
+object. It can take one of 3 values
+
+* if the value is a single scalar, a value of 1 indicates the object has a clock-wise node order; 
+  a value of -1 indicates a counter-clock-wise node order
+* if the value is a single row-vector, it defines a common normal vector assuming the object 
+  is a planar geometry
+* if the value is an N-by-2 (for 2-D geometries) or N-by-3 (for 3-D geometries) matrix, each
+  row defines a normal vector for each line-segment or surface patch; the row number `N` must 
+  match the line-segment or face patch count in the parent object.
+
+#### Color
+The `Color` property defines the color of the entire object or the at each entry (a vertex, or a 
+surface patch, or a solid element) of the parent object.
+
+It can take one of 2 values
+
+* if the value is a single row vector
+  * if the vector contains a single scalar, it defines a gray-scale value
+  * if the vector contains 3 scalars, it defines a color in the RGB (red-green-blue) format
+  * if the vector contains 4 scalars, it defines a color in the RGBA (red-green-blue-alpha) format
+  * if the vector contains N>4 scalars, it defines the gray-scale values at each entry of the parent object
+* if the value is an N-by-3 or N-by-4 array, it defines the colors, in RGB or RGBA format, respectively, 
+  at each entry of the parent object
+
+#### Tag
+The `Tag` property defines a label for the entire object or the at each entry (a vertex, or a 
+surface patch, or a solid element) of the parent object.
+
+It can take one of 3 values
+* if it is a single integer or a string, the tag is associated with the entire parent object
+* if it is an N-by-1 or 1-by-N vector with N matching the length of the entries in the parent object, 
+  it defines the tags for each entry of the parent object.
+
+#### Value
+The `Value` property associates a single numerical value to the entire parent object or at each 
+entry (a vertex, or a surface patch, or a solid element) of the parent object.
+
+It can take one of 3 values
+* if it is a single numerical value or a string, or a structure, the value is associated with 
+  the entire parent object
+* if it is an N-by-M matrix with N matching the length of the entries in the parent object, 
+  it defines a set of M-tuple numerical properties associated with each entry in the parent object
+
+#### Size
+The `Size` property defines the size for the entire object or the at each entry (a vertex, or a 
+surface patch, or a solid element) of the parent object.
+
+It can take one of 3 values
+* if it is a single numerical value, the tag is uniform across all entries of the parent object
+* if it is an N-by-1 or 1-by-N vector with N matching the length of the entries in the parent object, 
+  it defines the size for each entry of the parent object.
 
 ### Discrete and parametric graphics
 
@@ -317,14 +365,7 @@ subfields:
 A vertex represents a discrete spatial location in the N-dimensional space.
 
 For all vertex data objects, the `"Properties"` can store the below optional 
-subfields:
-```
-"Normal": [...]
-"Color": [...]
-"Value": [...]
-"Size": [...]
-"Tag": [...]
-```
+subfields: `"Normal", "Color", "Value", "Size", "Tag"`.
 
 ##### MeshVertex1
 `"MeshVertex1"` defines a 1-D position vector. It must be defined as an N-by-1 or
@@ -385,24 +426,18 @@ be defined as an N-by-4 numerical array.
 
 #### Line segments and curves
 
-For all line data objects, the "Properties" can store the below optional 
-subfields:
-```
-"Color": []
-"Value": []
-"Size": []
-"Label": []
-```
+For all line and curve objects, the `"Properties"` can store the below optional 
+subfields: `"Normal", "Color", "Value", "Size", "Tag"`.
 
-##### MeshLine
+##### MeshPolyLine
 
-`"MeshLine"` defines a set of line segments using an ordered 1-D list of node indices 
+`"MeshPolyLine"` defines a set of line segments using an ordered 1-D list of node indices 
 (starting from 1). It must be defined by an 1-by-N or N-by-1 vector of integers. 
 If an index is 0, it marks the end of the current line segment and starts a new line 
 segment from the next index.
 
 ```
-"MeshLine": [N1, N2, N3, ... ]
+"MeshPolyLine": [N1, N2, N3, ... ]
 ```
 
 ##### MeshEdge
@@ -438,15 +473,8 @@ the weight (`w`) at each control point.
 
 #### Surfaces
 
-For all surface objects, the "Properties" can store the below optional 
-subfields:
-```
-"Normal": [...]
-"Color": []
-"Value": []
-"Size": []
-"Tag": []
-```
+For allsurface objects, the `"Properties"` can store the below optional 
+subfields: `"Normal", "Color", "Value", "Size", "Tag"`.
 
 
 ##### MeshTri3
@@ -526,13 +554,8 @@ defines the weight (`w`) at each control point.
 
 #### Solid Elements
 
-For all solid element objects, the "Properties" can store the below optional 
-subfields:
-```
-"Color": []
-"Value": []
-"Tag": []
-```
+For all solid element  objects, the `"Properties"` can store the below optional 
+subfields: `"Color", "Value", "Tag"`.
 
 ##### MeshTet4
 `"MeshTet4"` defines a discretized volumetric domain made of tetrahedral elements, with each
