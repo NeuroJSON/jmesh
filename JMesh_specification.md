@@ -1,4 +1,4 @@
-JMesh - A versatile JSON data format for unstructured meshes and geometries
+JMesh - A versatile data format for unstructured meshes and geometries
 ============================================================
 
 - **Status of this document**: This document is current under development.
@@ -7,7 +7,7 @@ JMesh - A versatile JSON data format for unstructured meshes and geometries
 - **Version**: 0.4
 - **Abstract**:
 
-> JMesh is a portable and extensible file format for storage and interchange of
+> JMesh is a portable and extensible file format for the storage and interchange of
 unstructured geometric data, including discretized geometries such as triangular 
 and tetrahedral meshes, parametric geometries such as NURBS curves and surfaces, and
 constructive geometries such as constructive solid geometry (CGS) of shape primitives
@@ -58,7 +58,7 @@ manipulation, 3-D fabrication and computer graphics rendering and animations.
       - [MeshElem](#meshelem)
   * [Constructive graphics and grouping](#constructive-graphics-and-grouping)
     + [Mesh grouping and partitioning](#mesh-grouping-and-partitioning)
-    + [Constructive solid graphics (CSG)](#constructive-solid-graphics--csg-)
+    + [Constructive solid graphics (CSG)](#constructive-solid-graphics-csg)
   * [Textures](#textures)
     + [Texture1D](#texture1d)
     + [Texture2D](#texture2d)
@@ -184,28 +184,28 @@ Grammar
 ------------------------
 
 All JMesh files are JData specification compliant. The same as JData, it has
-both a text format based on JSON serialization and a binary format
+both a text format based on JSON serialization scheme and a binary format
 based on the UBJSON serialization scheme. 
 
-Briefly, the text-based JMesh is a valid JSON file with the extension to 
+Briefly, the text-format JMesh is a valid JSON file with the extension to 
 support concatenated JSON objects; the binary-format JMesh is a valid UBJSON 
 with the extended syntax to support N-D array. Please refer to the JData 
 specification for the definitions.
 
 Nearly all supported mesh data containers (i.e. named JData nodes) can be defined 
 using one of the two forms: an N-D array or a structure. For each JMesh data
-keyword defined the following sections, we define the requirements on the data 
-dimensions if one chooses the array form, and and the required and optional 
-subfields if one chooses the structure form.
+keyword defined the following sections, we define the requirements by specifying 
+the data dimensions if one chooses the array form, or define a list of required or
+optional subfield names if one chooses the structure form.
 
 ### Array form
 
-For simple data, one can use the "array form" to store the data under a container 
+For simple data, one can use the "array form" to store the data under a JMesh 
 keyword. In such case, the format of the data must follow the "N-Dimensional 
 Array Storage Keyword" rules defined in the JData specification. For example, 
 one can store a 1-D or 2-D array using the direct storage format as
 ```
- "jmesh_container_1d": [v1,v2,...,vn]
+ "jmesh_container_1d": [v1,v2,...,vn], 
  "jmesh_container_2d": [
     [v11,v12,...,v1n],
     [v21,v22,...,v2n],
@@ -221,8 +221,11 @@ or using the "annotated storage" format as
        "_ArrayData_": [v1,v2,v3,...]
   }
 ```
-The direct storage format and the annotated storage format are equivalent. In the 
-below sections, we use mostly the direct format to explain the data format, but
+Please note that the arrays that can be represented by the direct storage 
+format is a subset of those supported by the "annotated format", as the 
+latter provides additional features, such as defining data types or 
+supporting sparse or complex-valued matrices. In the below sections, 
+we use mostly the direct storage form to explain the data format, but 
 one shall also store the data using the annotated format.
 
 ### Structure form
@@ -243,28 +246,38 @@ container may have the below subfields:
       ]
  }
 ```
-Here, only the `"Data"` subfield is required, and it must have an array-value that 
-is the same as the "direct storage" form. The optional `"_DataInfo_"` is the JData 
-construct for storing metadata associated with this structure. The other optional 
-`"Properties"` subfield allows one to store additional data with this shape/mesh 
-element. The `"Properties"` subfield can be an array or structure with 
+Here, only the `"Data"` subfield is required, and it must have the same data 
+stored in the "array form" (either in direct or annotated format) as shown above. 
+
+The optional `"Properties"` subfield allows one to store additional data with this 
+shape/mesh element. The `"Properties"` subfield can be an array or structure with 
 additional subfields.
+
+The optional `"_DataInfo_"` is the JData construct for storing metadata associated 
+with this structure. It can be used to store simple metadata, such as data acquisition
+date, operator name, or version number. The strategies how to split the metadata between
+`_DataInfo_` and `Properties` is user-depedent.
 
 
 Mesh Data Keywords
 ------------------------
 In this section, we define dedicated JSON `"name"` keywords that can be used to 
-define discretized shapes objects (or meshes).
+define discretized shapes objects (or meshes), parametric graphics, or constructive
+geometries.
 
-In most of the cases, the data container keywords defined in this section have a 
-prefix of `"Mesh"`. Many of the keywords ends with a numerical value which typically
+Most of the data container keywords associated with discretized geometries have a
+prefix of `"Mesh"`; keywords associated with parametric shape constructs have a prefix
+of `"Shape"`; keywords associated with constructive solid geometries have a prefix `"CSG"`. 
+Many of the keywords ends with a numerical value which typically
 represents the column number of the data when stored in the array format.
 
-All indices - integers mapping between data entries - shall have a start value of 1. 
-In the below section, we use notation "`Ni`" (i=1,2,...) to denote integers or node indices,
-`xi,yi,zi` or `xij, yij, zij`  to denote coordinates, `wi` to denote additional coordinate
-(in 4-D) or scaler values (such as weights), `vi` or `vij` to denote numerical values
-associated with the geometric object; `ti`, `tij` or `tijk` to represent texture data in
+All indices - integers mapping between data entries - shall have a start value of 1.
+
+In the below section, we use notation "`N_i, N_ij` or `N_ijk` (`i=1,2,...`, `j=1,2,...`, 
+`k=1,2,...`) to denote node indices or array dimensions; `x_i, y_i, z_i` or 
+`x_ij, y_ij, z_ij`  to denote coordinates, `w_i` to denote additional coordinate
+(in 4-D) or scaler values (such as weights), `v_i` or `v_ij` to denote numerical values
+associated with the geometric object; `t_i`, `t_ij` or `t_ijk` to represent texture data in
 various dimensions.
 
 Below is a short summary of the JMesh data annotation/storage keywords to be introduced
@@ -285,6 +298,17 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
 * **Extrusion and revolving**: `ShapeExtrude2D`,`ShapeExtrude3D`,`ShapeRevolve3D`
 * **Properties**: `Color`,`Normal`,`Size`,`Label`,`Value`
 
+### Common geometry properties
+
+As mentioned above, if a For all vertex data objects, the `"Properties"` can store the below optional 
+subfields:
+```
+"Normal": [...]
+"Color": [...]
+"Value": [...]
+"Size": [...]
+"Tag": [...]
+```
 
 ### Discrete and parametric graphics
 
@@ -292,14 +316,14 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
 
 A vertex represents a discrete spatial location in the N-dimensional space.
 
-For all vertex data objects, the "Properties" can store the below optional 
+For all vertex data objects, the `"Properties"` can store the below optional 
 subfields:
 ```
 "Normal": [...]
 "Color": [...]
 "Value": [...]
 "Size": [...]
-"Label": [...]
+"Tag": [...]
 ```
 
 ##### MeshVertex1
@@ -421,7 +445,7 @@ subfields:
 "Color": []
 "Value": []
 "Size": []
-"Label": []
+"Tag": []
 ```
 
 
@@ -507,7 +531,7 @@ subfields:
 ```
 "Color": []
 "Value": []
-"Label": []
+"Tag": []
 ```
 
 ##### MeshTet4
