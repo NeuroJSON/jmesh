@@ -1,4 +1,4 @@
-JMesh - A versatile JSON data format for unstructured meshes and geometries
+JMesh - A versatile data format for unstructured meshes and geometries
 ============================================================
 
 - **Status of this document**: This document is current under development.
@@ -7,7 +7,7 @@ JMesh - A versatile JSON data format for unstructured meshes and geometries
 - **Version**: 0.4
 - **Abstract**:
 
-> JMesh is a portable and extensible file format for storage and interchange of
+> JMesh is a portable and extensible file format for the storage and interchange of
 unstructured geometric data, including discretized geometries such as triangular 
 and tetrahedral meshes, parametric geometries such as NURBS curves and surfaces, and
 constructive geometries such as constructive solid geometry (CGS) of shape primitives
@@ -58,7 +58,7 @@ manipulation, 3-D fabrication and computer graphics rendering and animations.
       - [MeshElem](#meshelem)
   * [Constructive graphics and grouping](#constructive-graphics-and-grouping)
     + [Mesh grouping and partitioning](#mesh-grouping-and-partitioning)
-    + [Constructive solid graphics (CSG)](#constructive-solid-graphics--csg-)
+    + [Constructive solid graphics (CSG)](#constructive-solid-graphics-csg)
   * [Textures](#textures)
     + [Texture1D](#texture1d)
     + [Texture2D](#texture2d)
@@ -184,28 +184,28 @@ Grammar
 ------------------------
 
 All JMesh files are JData specification compliant. The same as JData, it has
-both a text format based on JSON serialization and a binary format
+both a text format based on JSON serialization scheme and a binary format
 based on the UBJSON serialization scheme. 
 
-Briefly, the text-based JMesh is a valid JSON file with the extension to 
+Briefly, the text-format JMesh is a valid JSON file with the extension to 
 support concatenated JSON objects; the binary-format JMesh is a valid UBJSON 
 with the extended syntax to support N-D array. Please refer to the JData 
 specification for the definitions.
 
 Nearly all supported mesh data containers (i.e. named JData nodes) can be defined 
 using one of the two forms: an N-D array or a structure. For each JMesh data
-keyword defined the following sections, we define the requirements on the data 
-dimensions if one chooses the array form, and and the required and optional 
-subfields if one chooses the structure form.
+keyword defined the following sections, we define the requirements by specifying 
+the data dimensions if one chooses the array form, or define a list of required or
+optional subfield names if one chooses the structure form.
 
 ### Array form
 
-For simple data, one can use the "array form" to store the data under a container 
+For simple data, one can use the "array form" to store the data under a JMesh 
 keyword. In such case, the format of the data must follow the "N-Dimensional 
 Array Storage Keyword" rules defined in the JData specification. For example, 
 one can store a 1-D or 2-D array using the direct storage format as
 ```
- "jmesh_container_1d": [v1,v2,...,vn]
+ "jmesh_container_1d": [v1,v2,...,vn], 
  "jmesh_container_2d": [
     [v11,v12,...,v1n],
     [v21,v22,...,v2n],
@@ -221,8 +221,11 @@ or using the "annotated storage" format as
        "_ArrayData_": [v1,v2,v3,...]
   }
 ```
-The direct storage format and the annotated storage format are equivalent. In the 
-below sections, we use mostly the direct format to explain the data format, but
+Please note that the arrays that can be represented by the direct storage 
+format is a subset of those supported by the "annotated format", as the 
+latter provides additional features, such as defining data types or 
+supporting sparse or complex-valued matrices. In the below sections, 
+we use mostly the direct storage form to explain the data format, but 
 one shall also store the data using the annotated format.
 
 ### Structure form
@@ -243,28 +246,38 @@ container may have the below subfields:
       ]
  }
 ```
-Here, only the `"Data"` subfield is required, and it must have an array-value that 
-is the same as the "direct storage" form. The optional `"_DataInfo_"` is the JData 
-construct for storing metadata associated with this structure. The other optional 
-`"Properties"` subfield allows one to store additional data with this shape/mesh 
-element. The `"Properties"` subfield can be an array or structure with 
+Here, only the `"Data"` subfield is required, and it must have the same data 
+stored in the "array form" (either in direct or annotated format) as shown above. 
+
+The optional `"Properties"` subfield allows one to store additional data with this 
+shape/mesh element. The `"Properties"` subfield can be an array or structure with 
 additional subfields.
+
+The optional `"_DataInfo_"` is the JData construct for storing metadata associated 
+with this structure. It can be used to store simple metadata, such as data acquisition
+date, operator name, or version number. The strategies how to split the metadata between
+`_DataInfo_` and `Properties` is user-depedent.
 
 
 Mesh Data Keywords
 ------------------------
 In this section, we define dedicated JSON `"name"` keywords that can be used to 
-define discretized shapes objects (or meshes).
+define discretized shapes objects (or meshes), parametric graphics, or constructive
+geometries.
 
-In most of the cases, the data container keywords defined in this section have a 
-prefix of `"Mesh"`. Many of the keywords ends with a numerical value which typically
+Most of the data container keywords associated with discretized geometries have a
+prefix of `"Mesh"`; keywords associated with parametric shape constructs have a prefix
+of `"Shape"`; keywords associated with constructive solid geometries have a prefix `"CSG"`. 
+Many of the keywords ends with a numerical value which typically
 represents the column number of the data when stored in the array format.
 
-All indices - integers mapping between data entries - shall have a start value of 1. 
-In the below section, we use notation "`Ni`" (i=1,2,...) to denote integers or node indices,
-`xi,yi,zi` or `xij, yij, zij`  to denote coordinates, `wi` to denote additional coordinate
-(in 4-D) or scaler values (such as weights), `vi` or `vij` to denote numerical values
-associated with the geometric object; `ti`, `tij` or `tijk` to represent texture data in
+All indices - integers mapping between data entries - shall have a start value of 1.
+
+In the below section, we use notation "`N_i, N_ij` or `N_ijk` (`i=1,2,...`, `j=1,2,...`, 
+`k=1,2,...`) to denote node indices or array dimensions; `x_i, y_i, z_i` or 
+`x_ij, y_ij, z_ij`  to denote coordinates, `w_i` to denote additional coordinate
+(in 4-D) or scaler values (such as weights), `v_i` or `v_ij` to denote numerical values
+associated with the geometric object; `t_i`, `t_ij` or `t_ijk` to represent texture data in
 various dimensions.
 
 Below is a short summary of the JMesh data annotation/storage keywords to be introduced
@@ -285,6 +298,65 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
 * **Extrusion and revolving**: `ShapeExtrude2D`,`ShapeExtrude3D`,`ShapeRevolve3D`
 * **Properties**: `Color`,`Normal`,`Size`,`Label`,`Value`
 
+### Common geometry properties
+
+If a JMesh container is a structure, it can contain an optional element named `"Properties"`.
+In this section, we define a set of common properties and their formats that are shared among
+many JMesh keywords. 
+
+#### Normal
+The `Normal` property defines the normal vector(s) or orientation of a line or surface
+object. It can take one of 3 values
+
+* if the value is a single scalar, a value of 1 indicates the object has a clock-wise node order; 
+  a value of -1 indicates a counter-clock-wise node order
+* if the value is a single row-vector, it defines a common normal vector assuming the object 
+  is a planar geometry
+* if the value is an N-by-2 (for 2-D geometries) or N-by-3 (for 3-D geometries) matrix, each
+  row defines a normal vector for each line-segment or surface patch; the row number `N` must 
+  match the line-segment or face patch count in the parent object.
+
+#### Color
+The `Color` property defines the color of the entire object or the at each entry (a vertex, or a 
+surface patch, or a solid element) of the parent object.
+
+It can take one of 2 values
+
+* if the value is a single row vector
+  * if the vector contains a single scalar, it defines a gray-scale value
+  * if the vector contains 3 scalars, it defines a color in the RGB (red-green-blue) format
+  * if the vector contains 4 scalars, it defines a color in the RGBA (red-green-blue-alpha) format
+  * if the vector contains N>4 scalars, it defines the gray-scale values at each entry of the parent object
+* if the value is an N-by-3 or N-by-4 array, it defines the colors, in RGB or RGBA format, respectively, 
+  at each entry of the parent object
+
+#### Tag
+The `Tag` property defines a label for the entire object or the at each entry (a vertex, or a 
+surface patch, or a solid element) of the parent object.
+
+It can take one of 3 values
+* if it is a single integer or a string, the tag is associated with the entire parent object
+* if it is an N-by-1 or 1-by-N vector with N matching the length of the entries in the parent object, 
+  it defines the tags for each entry of the parent object.
+
+#### Value
+The `Value` property associates a single numerical value to the entire parent object or at each 
+entry (a vertex, or a surface patch, or a solid element) of the parent object.
+
+It can take one of 3 values
+* if it is a single numerical value or a string, or a structure, the value is associated with 
+  the entire parent object
+* if it is an N-by-M matrix with N matching the length of the entries in the parent object, 
+  it defines a set of M-tuple numerical properties associated with each entry in the parent object
+
+#### Size
+The `Size` property defines the size for the entire object or the at each entry (a vertex, or a 
+surface patch, or a solid element) of the parent object.
+
+It can take one of 3 values
+* if it is a single numerical value, the tag is uniform across all entries of the parent object
+* if it is an N-by-1 or 1-by-N vector with N matching the length of the entries in the parent object, 
+  it defines the size for each entry of the parent object.
 
 ### Discrete and parametric graphics
 
@@ -292,15 +364,8 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
 
 A vertex represents a discrete spatial location in the N-dimensional space.
 
-For all vertex data objects, the "Properties" can store the below optional 
-subfields:
-```
-"Normal": [...]
-"Color": [...]
-"Value": [...]
-"Size": [...]
-"Label": [...]
-```
+For all vertex data objects, the `"Properties"` can store the below optional 
+subfields: `"Normal", "Color", "Value", "Size", "Tag"`.
 
 ##### MeshVertex1
 `"MeshVertex1"` defines a 1-D position vector. It must be defined as an N-by-1 or
@@ -361,24 +426,18 @@ be defined as an N-by-4 numerical array.
 
 #### Line segments and curves
 
-For all line data objects, the "Properties" can store the below optional 
-subfields:
-```
-"Color": []
-"Value": []
-"Size": []
-"Label": []
-```
+For all line and curve objects, the `"Properties"` can store the below optional 
+subfields: `"Normal", "Color", "Value", "Size", "Tag"`.
 
-##### MeshLine
+##### MeshPolyLine
 
-`"MeshLine"` defines a set of line segments using an ordered 1-D list of node indices 
+`"MeshPolyLine"` defines a set of line segments using an ordered 1-D list of node indices 
 (starting from 1). It must be defined by an 1-by-N or N-by-1 vector of integers. 
 If an index is 0, it marks the end of the current line segment and starts a new line 
 segment from the next index.
 
 ```
-"MeshLine": [N1, N2, N3, ... ]
+"MeshPolyLine": [N1, N2, N3, ... ]
 ```
 
 ##### MeshEdge
@@ -414,15 +473,8 @@ the weight (`w`) at each control point.
 
 #### Surfaces
 
-For all surface objects, the "Properties" can store the below optional 
-subfields:
-```
-"Normal": [...]
-"Color": []
-"Value": []
-"Size": []
-"Label": []
-```
+For allsurface objects, the `"Properties"` can store the below optional 
+subfields: `"Normal", "Color", "Value", "Size", "Tag"`.
 
 
 ##### MeshTri3
@@ -502,13 +554,8 @@ defines the weight (`w`) at each control point.
 
 #### Solid Elements
 
-For all solid element objects, the "Properties" can store the below optional 
-subfields:
-```
-"Color": []
-"Value": []
-"Label": []
-```
+For all solid element  objects, the `"Properties"` can store the below optional 
+subfields: `"Color", "Value", "Tag"`.
 
 ##### MeshTet4
 `"MeshTet4"` defines a discretized volumetric domain made of tetrahedral elements, with each
