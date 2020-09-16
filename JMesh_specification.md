@@ -4,7 +4,7 @@ JMesh - A versatile data format for unstructured meshes and geometries
 - **Status of this document**: This document is current under development.
 - **Copyright**: (C) Qianqian Fang (2011, 2019) <q.fang at neu.edu>
 - **License**: Apache License, Version 2.0
-- **Version**: 0.4
+- **Version**: 1 (Draft 1)
 - **Abstract**:
 
 > JMesh is a portable and extensible file format for the storage and interchange of
