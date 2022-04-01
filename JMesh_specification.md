@@ -583,7 +583,7 @@ N is the total number of hexahedra.
 ]
 ```
 ##### MeshPyramid5
-`"MeshHex8"` defines a discretized volumetric domain made of 5-node pyramid elements, with each
+`"MeshPyramid5"` defines a discretized volumetric domain made of 5-node pyramid elements, with each
 element specified by a 5-tuple node index. It must be defined by an N-by-5 integer array, where 
 N is the total number of pyramid.
 ```
