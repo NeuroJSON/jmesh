@@ -1,3 +1,18 @@
 [submodule "samples"]
 	path = samples
 	url = git@github.com:NeuroJSON/JMeshSamples.git
+[submodule "datasets/BrainMeshLibrary"]
+	path = datasets/BrainMeshLibrary
+	url = git@github.com:NeuroJSON/BrainMeshLibrary.git
+[submodule "datasets/Colin27BrainMesh"]
+	path = datasets/Colin27BrainMesh
+	url = https://github.com/NeuroJSON/Colin27BrainMesh
+[submodule "apps/BlenderPhotonics"]
+	path = apps/BlenderPhotonics
+	url = https://github.com/COTILab/BlenderPhotonics.git
+[submodule "apps/MeshFormatsJS"]
+	path = apps/MeshFormatsJS
+	url = https://github.com/neurolabusc/MeshFormatsJS.git
+[submodule "apps/nii2mesh"]
+	path = apps/nii2mesh
+	url = https://github.com/neurolabusc/nii2mesh
