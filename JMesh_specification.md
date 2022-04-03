@@ -296,7 +296,7 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
   `ShapeGrid3`,`ShapeSphere`,`ShapeCylinder`,`ShapeEllipsoid`,`ShapeTorus`,`ShapeCone`,
   `ShapeConeFrustum`,`ShapeSphereShell`,`ShapeSphereSegment`
 * **Extrusion and revolving**: `ShapeExtrude2D`,`ShapeExtrude3D`,`ShapeRevolve3D`
-* **Properties**: `Color`,`Normal`,`Size`,`Label`,`Value`
+* **Properties**: `Color`,`Normal`,`Size`,`Tag`,`Value`,`Texture`
 
 ### Common geometry properties
 
@@ -354,7 +354,7 @@ The `Size` property defines the size for the entire object or the at each entry 
 surface patch, or a solid element) of the parent object.
 
 It can take one of 3 values
-* if it is a single numerical value, the tag is uniform across all entries of the parent object
+* if it is a single numerical value, the size is uniform across all entries of the parent object
 * if it is an N-by-1 or 1-by-N vector with N matching the length of the entries in the parent object, 
   it defines the size for each entry of the parent object.
 
@@ -474,7 +474,7 @@ the weight (`w`) at each control point.
 #### Surfaces
 
 For allsurface objects, the `"Properties"` can store the below optional 
-subfields: `"Normal", "Color", "Value", "Size", "Tag"`.
+subfields: `"Normal", "Color", "Value", "Size", "Tag", "Texture"`.
 
 
 ##### MeshTri3
@@ -555,7 +555,7 @@ defines the weight (`w`) at each control point.
 #### Solid Elements
 
 For all solid element  objects, the `"Properties"` can store the below optional 
-subfields: `"Color", "Value", "Tag"`.
+subfields: `"Color", "Value", "Tag", "Texture"`.
 
 ##### MeshTet4
 `"MeshTet4"` defines a discretized volumetric domain made of tetrahedral elements, with each
@@ -883,7 +883,11 @@ RGBA, etc).
 
 ### Shape primitives
 
-All shape primitive objects (a structure) supports an optional parameter `"Segment": [...]`, defining
+All shape primitives are defined in the form of an object. Their optional properties can be 
+directly inserted as a subfield in the shape object. The supported properties include: 
+`"Color", "Value", "Tag", "Texture", "Segment"`.
+
+All shape primitive objects supports an optional parameter `"Segment": [...]`, defining
 the number of steps for the discretization of the shape components (lines, curves, surfaces).
 
 For 1-D manifold (line objects), `Segment` contains a single integer; for 2-D manifold, it contains
