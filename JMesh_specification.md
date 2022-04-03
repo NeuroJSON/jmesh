@@ -770,7 +770,7 @@ If either (or both) of the operand, "obj1" or "obj2", is a string, it must be tr
 name, with which one must locate and retrieve the operand within this current document before 
 performing the CSG operation.
 
-For example, the below CSG tree represents the CSG object `"scene"= ("obj1" ∩ "obj2") ∪ "obj3"`
+For example, the below CSG tree represents the CSG object `"scene" = ("obj1" ∩ "obj2") ∪ "obj3"`
 ```
     "CSGObject(scene)": [
         {
@@ -908,7 +908,7 @@ A 2-D disc defined by the center (`"O"`) and radius `"r"`
 
 A 2-D ellipse defined by the center (`"O"`), x and y axes in the un-rotated coordinate system (`"rx"` and `"ry"`), and rotation angle `"theta0"`
 
-`"ShapeEllipse": {"O":[x0,y0], "R": [r1,r2], "Angle":theta0}`
+`"ShapeEllipse": {"O":[x0,y0], "R": [r1,r2], "Angle": theta0}`
 
 ##### ShapeLine2
 
@@ -919,7 +919,7 @@ A 2-D line defined by one point along the line (`"O"`), and a 2-D vector (`"V"`)
 ##### ShapeArrow2
 
 A 2-D arrow object defined by one point along the line (`"O"`), and a 2-D vector (`"V"`)  aligns with 
-the direction of the line, and the arrow-head size is indicated by scalar "s"
+the direction of the line, and the arrow-head size is indicated by scalar `"s"`
 
 `"ShapeArrow2": {"O":[x0,y0], "V": [v1,v2], "Size": s}`
 
@@ -962,7 +962,7 @@ A 3-D axis-aligned-bounding-box (AABB) defined by the two diagonal points (`"O"`
 
 A 2-D disc defined by the center (`"O"`) and radius `"R"`; the normal direction of the disc is specified in `"N"`
 
-`"ShapeDisc3": {"O":[x0,y0,z0], "R": r, "N"=[v1,v2,v3]}`
+`"ShapeDisc3": {"O":[x0,y0,z0], "R": r, "N": [v1,v2,v3]}`
 
 ##### ShapeGrid3
 
@@ -975,14 +975,14 @@ segments along the x/y/z coordinates are indicated by `"Nx"`, `"Ny"` and `"Nz"`,
 
 A 3-D sphere defined by the center (`"O"`) and radius `"r"`
 
-`"ShapePlane3": {"O":[x0,y0,z0], "R": r}`
+`"ShapeSphere": {"O":[x0,y0,z0], "R": r}`
 
 ##### ShapeCylinder
 
 A 3-D cylinder defined by one end of the cylindrical axis (`"O"`) and the other end of the axis `"P"`;
 the radius of the cylinder is specified in `"r"`
 
-`"ShapePlane3": {"O":[x0,y0,z0], "P":[x1,y1,z1], "R": r}`
+`"ShapeCylinder": {"O":[x0,y0,z0], "P":[x1,y1,z1], "R": r}`
 
 ##### ShapeEllipsoid
 
@@ -1032,7 +1032,7 @@ starting plane, and `h2` at the ending plane
 JMesh supports mesh constructs created via transformations, such as extrusion or revolution. 
 These operators requires two curve objects as operands, one as the "source", the other as the 
 guide (in extrusion) or axis (when revolving). The permitted curve objects can be found in the
-"Line segments and curves" section, i.e. "MeshLine", "MeshEdge", and "MeshBSpline2D".
+"Line segments and curves" section, i.e. `"MeshLine"`, `"MeshEdge"`, and `"MeshBSpline2D"`.
 
 ##### ShapeExtrude2D
 
