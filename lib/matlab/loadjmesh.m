@@ -4,7 +4,8 @@ function jmsh=loadjmesh(filename, varargin)
 %       or
 %    jmsh=loadjmesh(inputfile, 'Param1',value1, 'Param2',value2,...)
 %
-%    Load a text or binary JMesh file with format defined in JMesh specification: https://github.com/fangq/jmesh
+%    Load a text or binary JMesh file with format defined in JMesh
+%    specification: https://github.com/NeuroJSON/jmesh
 %
 %    author: Qianqian Fang (q.fang <at> neu.edu)
 %
@@ -13,7 +14,7 @@ function jmsh=loadjmesh(filename, varargin)
 %                *.bmsh for binary JMesh file
 %                *.jmsh for text JMesh file
 %        options: (optional) if loading from a .bmsh file, please see the options for
-%               loadubjson.m (part of JSONLab); if loading from a .jmsh, please see the 
+%               loadbj.m (part of JSONLab); if loading from a .jmsh, please see the 
 %               supported options for loadjson.m (part of JSONLab).
 %
 %    output:
@@ -36,14 +37,14 @@ if(nargin<1)
     error('you must provide data and output file name');
 end
 
-if(~exist('loadubjson','file'))
+if(~exist('loadbj','file'))
     error('you must first install JSONLab from http://github.com/fangq/jsonlab/');
 end
 
 if(regexp(filename,'\.jmsh$'))
     jmsh=loadjson(filename,varargin{:});
 elseif(regexp(filename,'\.bmsh$'))
-    jmsh=loadubjson(filename,varargin{:});
+    jmsh=loadbj(filename,varargin{:});
 else
     error('file suffix must be .jmsh for text JMesh, .bmsh for binary JMesh');
 end
