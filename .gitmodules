@@ -9,7 +9,7 @@
 	url = https://github.com/NeuroJSON/Colin27BrainMesh
 [submodule "apps/BlenderPhotonics"]
 	path = apps/BlenderPhotonics
-	url = https://github.com/COTILab/BlenderPhotonics.git
+	url = https://github.com/NeuroJSON/BlenderPhotonics.git
 [submodule "apps/MeshFormatsJS"]
 	path = apps/MeshFormatsJS
 	url = https://github.com/neurolabusc/MeshFormatsJS.git

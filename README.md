@@ -17,13 +17,13 @@ for convenient editing and version control.
 You can use a number of methods to provide your feedback to the working 
 draft of this file specification, including
 
-- [Create an "Issue"](https://github.com/fangq/jmesh/issues)
+- [Create an "Issue"](https://github.com/NeuroJSON/jmesh/issues)
   - This is the most recommended method to provide detailed feedback or 
     discussion. An "Issue" in github is highly versatile. One can ask a 
     question, report a bug, provide a feature request, or simply propose
     general discussions. Please use URLs or keywords to link your discussion 
     to a specific line/section/topic in the document.
-- [Write short comments on Request for Comments (RFC) commits](https://github.com/fangq/jmesh/)
+- [Write short comments on Request for Comments (RFC) commits](https://github.com/NeuroJSON/jmesh/)
   - A milestone version of the specification will be associated with an
     RFC (Request for comments) commit (where the entire file is removed
     and re-added so that every line appears in such comment). One can
@@ -33,12 +33,12 @@ draft of this file specification, including
     "plus" icon is displayed, clicking it will allow one to comment on a 
     specific line (or reply to other's comments).
   - The RFC page can get busy if too many comments appear. Please consider 
-    using the [Issues section](https://github.com/fangq/jmesh/issues) if this happens.
+    using the [Issues section](https://github.com/NeuroJSON/jmesh/issues) if this happens.
   - One can browse the commit history of the specification document. If
     anyone is interested in commenting on a particular updated, you can also
     comment on any of the commit page using the same method.
-- [Use the JData mailing list](https://groups.google.com/forum/#!forum/openjdata)
-  - You may send your comments to the jdata mailing list (openjdata at googlegroups.com). 
+- [Use NeuroJSON mailing list](https://groups.google.com/forum/#!forum/neurojson)
+  - You may send your comments to the neurojson mailing list (neurojson at googlegroups.com). 
     Subscribers will discuss by emails, and if a motion is reached, proposals
     will be resubmitted as an Issue, and changes to the specification will be
     associated with this issue page.
@@ -48,15 +48,15 @@ please follow the below steps
 
 - Fork this repository and make updates, then create a pull-request
   - Please first register an account on github, then, browse the 
-    [JMesh repository](https://github.com/fangq/jmesh);
+    [JMesh repository](https://github.com/NeuroJSON/jmesh);
     on the top-right of this page, find and click the "Fork" button.
   - once you fork the JMesh project to your own repository, you may edit the
     files in your browser directly, or download to your local folder, and 
     edit the files using a text editor;
   - once your revision is complete, please "commit" and "push" it to your forked
     git repository. Then you should create a pull-request against the upstream
-    repository (i.e., `fangq/jmesh`). Please select "Compare cross forks" and 
-    select `"fangq/jmesh"` as "base fork". Please write a descriptive title for
+    repository (i.e., `NeuroJSON/jmesh`). Please select "Compare cross forks" and 
+    select `"NeuroJSON/jmesh"` as "base fork". Please write a descriptive title for
     your pull-request. The project maintainer will review your updates
     and choose to merge to the upstream files or request revision from you.
     
