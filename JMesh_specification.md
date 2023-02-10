@@ -500,7 +500,7 @@ total number of quadrilaterals.
 "MeshQuad4": [
     [N11, N12, N13, N14],
     [N21, N22, N23, N24],
-    [N31, N32, N33, N24],
+    [N31, N32, N33, N34],
     ...
 ]
 ```
@@ -578,7 +578,7 @@ N is the total number of hexahedra.
 "MeshHex8": [
     [N11, N12, N13, ..., N18],
     [N21, N22, N23, ..., N28],
-    [N31, N32, N33, ..., N28],
+    [N31, N32, N33, ..., N38],
     ...
 ]
 ```
@@ -590,7 +590,7 @@ N is the total number of pyramid.
 "MeshPyramid5": [
     [N11, N12, N13, ..., N15],
     [N21, N22, N23, ..., N25],
-    [N31, N32, N33, ..., N25],
+    [N31, N32, N33, ..., N35],
     ...
 ]
 ```
@@ -604,7 +604,7 @@ N-by-10 integer array, where N is the total number of 10-node tetrahedra.
 "MeshTet10": [
     [N11, N12, N13, ..., N1_10],
     [N21, N22, N23, ..., N2_10],
-    [N31, N32, N33, ..., N2_10],
+    [N31, N32, N33, ..., N3_10],
     ...
 ]
 ```
