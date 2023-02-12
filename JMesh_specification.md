@@ -38,7 +38,7 @@ manipulation, 3-D fabrication and computer graphics rendering and animations.
       - [MeshVertex3](#meshvertex3)
       - [MeshVertex4](#meshvertex4)
     + [Line segments and curves](#line-segments-and-curves)
-      - [MeshLine](#meshline)
+      - [MeshPolyLine](#meshpolyline)
       - [MeshEdge](#meshedge)
       - [MeshBSpline2D](#meshbspline2d)
     + [Surfaces](#surfaces)
@@ -284,7 +284,7 @@ Below is a short summary of the JMesh data annotation/storage keywords to be int
 
 * **Mesh grouping**: `MeshGroup`, `MeshObject`, `MeshPart`
 * **Vertices**: `MeshVertex1`,`MeshVertex2`,`MeshVertex3`,`MeshVertex4`
-* **Lines**: `MeshLine`,`MeshEdge`,`MeshBSpline2D`
+* **Lines**: `MeshPolyLine`,`MeshEdge`,`MeshBSpline2D`
 * **Surfaces**: `MeshTri3`,`MeshQuad4`,`MeshPLC`,`MeshNURBS`
 * **Solid**: `MeshTet4`,`MeshHex8`,`MeshPyramid5`,`MeshTet10`
 * **Flexible containers**: `MeshNode`,`MeshSurf`,`MeshPoly`,`MeshElem`
@@ -1036,7 +1036,7 @@ starting plane, and `h2` at the ending plane
 JMesh supports mesh constructs created via transformations, such as extrusion or revolution. 
 These operators requires two curve objects as operands, one as the "source", the other as the 
 guide (in extrusion) or axis (when revolving). The permitted curve objects can be found in the
-"Line segments and curves" section, i.e. `"MeshLine"`, `"MeshEdge"`, and `"MeshBSpline2D"`.
+"Line segments and curves" section, i.e. `"MeshPolyLine"`, `"MeshEdge"`, and `"MeshBSpline2D"`.
 
 ##### ShapeExtrude2D
 
