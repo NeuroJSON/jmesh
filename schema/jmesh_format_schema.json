@@ -1,0 +1,1306 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JMesh JSON Schema",
+  "description": "JSON schema for JMesh - a versatile data format for unstructured meshes and geometries",
+  "type": "object",
+  "properties": {
+    "MeshGroup": {
+      "$ref": "#/definitions/MeshGroupDef"
+    },
+    "MeshObject": {
+      "$ref": "#/definitions/MeshObjectDef"
+    },
+    "MeshPart": {
+      "$ref": "#/definitions/MeshPartDef"
+    },
+    "MeshVertex1": {
+      "$ref": "#/definitions/MeshVertex1Def"
+    },
+    "MeshVertex2": {
+      "$ref": "#/definitions/MeshVertex2Def"
+    },
+    "MeshVertex3": {
+      "$ref": "#/definitions/MeshVertex3Def"
+    },
+    "MeshVertex4": {
+      "$ref": "#/definitions/MeshVertex4Def"
+    },
+    "MeshPolyLine": {
+      "$ref": "#/definitions/MeshPolyLineDef"
+    },
+    "MeshEdge": {
+      "$ref": "#/definitions/MeshEdgeDef"
+    },
+    "MeshBSpline2D": {
+      "$ref": "#/definitions/MeshBSpline2DDef"
+    },
+    "MeshTri3": {
+      "$ref": "#/definitions/MeshTri3Def"
+    },
+    "MeshQuad4": {
+      "$ref": "#/definitions/MeshQuad4Def"
+    },
+    "MeshPLC": {
+      "$ref": "#/definitions/MeshPLCDef"
+    },
+    "MeshNURBS": {
+      "$ref": "#/definitions/MeshNURBSDef"
+    },
+    "MeshTet4": {
+      "$ref": "#/definitions/MeshTet4Def"
+    },
+    "MeshHex8": {
+      "$ref": "#/definitions/MeshHex8Def"
+    },
+    "MeshPyramid5": {
+      "$ref": "#/definitions/MeshPyramid5Def"
+    },
+    "MeshTet10": {
+      "$ref": "#/definitions/MeshTet10Def"
+    },
+    "MeshNode": {
+      "$ref": "#/definitions/MeshNodeDef"
+    },
+    "MeshSurf": {
+      "$ref": "#/definitions/MeshSurfDef"
+    },
+    "MeshPoly": {
+      "$ref": "#/definitions/MeshPolyDef"
+    },
+    "MeshElem": {
+      "$ref": "#/definitions/MeshElemDef"
+    },
+    "CSGObject": {
+      "$ref": "#/definitions/CSGObjectDef"
+    },
+    "CSGUnion": {
+      "$ref": "#/definitions/CSGOperatorDef"
+    },
+    "CSGIntersect": {
+      "$ref": "#/definitions/CSGOperatorDef"
+    },
+    "CSGSubtract": {
+      "$ref": "#/definitions/CSGOperatorDef"
+    },
+    "Texture1D": {
+      "$ref": "#/definitions/Texture1DDef"
+    },
+    "Texture2D": {
+      "$ref": "#/definitions/Texture2DDef"
+    },
+    "Texture3D": {
+      "$ref": "#/definitions/Texture3DDef"
+    }
+  },
+  "patternProperties": {
+    "^MeshGroup\\(.+\\)$": {
+      "$ref": "#/definitions/MeshGroupDef"
+    },
+    "^MeshObject\\(.+\\)$": {
+      "$ref": "#/definitions/MeshObjectDef"
+    },
+    "^MeshPart\\(.+\\)$": {
+      "$ref": "#/definitions/MeshPartDef"
+    },
+    "^CSGObject\\(.+\\)$": {
+      "$ref": "#/definitions/CSGObjectDef"
+    },
+    "^Shape[A-Z][a-zA-Z0-9]*$": {
+      "$ref": "#/definitions/ShapePrimitiveDef"
+    }
+  },
+  "additionalProperties": true,
+  "definitions": {
+    "MeshGroupDef": {
+      "title": "MeshGroup",
+      "description": "Container for organizing multiple mesh objects hierarchically",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MeshContainerDef"
+          }
+        }
+      ]
+    },
+    "MeshObjectDef": {
+      "title": "MeshObject",
+      "description": "Container for individual mesh datasets",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MeshContainerDef"
+          }
+        }
+      ]
+    },
+    "MeshPartDef": {
+      "title": "MeshPart",
+      "description": "Container for mesh data records",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MeshContainerDef"
+          }
+        }
+      ]
+    },
+    "MeshContainerDef": {
+      "type": "object",
+      "description": "Generic container for mesh components",
+      "additionalProperties": true
+    },
+    "VertexPropertiesDef": {
+      "type": "object",
+      "description": "Properties for vertex objects",
+      "properties": {
+        "Normal": {
+          "$ref": "#/definitions/NormalPropertyDef"
+        },
+        "Color": {
+          "$ref": "#/definitions/ColorPropertyDef"
+        },
+        "Value": {
+          "$ref": "#/definitions/ValuePropertyDef"
+        },
+        "Size": {
+          "$ref": "#/definitions/SizePropertyDef"
+        },
+        "Tag": {
+          "$ref": "#/definitions/TagPropertyDef"
+        }
+      },
+      "additionalProperties": true
+    },
+    "LinePropertiesDef": {
+      "type": "object",
+      "description": "Properties for line/curve objects",
+      "properties": {
+        "Normal": {
+          "$ref": "#/definitions/NormalPropertyDef"
+        },
+        "Color": {
+          "$ref": "#/definitions/ColorPropertyDef"
+        },
+        "Value": {
+          "$ref": "#/definitions/ValuePropertyDef"
+        },
+        "Size": {
+          "$ref": "#/definitions/SizePropertyDef"
+        },
+        "Tag": {
+          "$ref": "#/definitions/TagPropertyDef"
+        }
+      },
+      "additionalProperties": true
+    },
+    "SurfacePropertiesDef": {
+      "type": "object",
+      "description": "Properties for surface objects",
+      "properties": {
+        "Normal": {
+          "$ref": "#/definitions/NormalPropertyDef"
+        },
+        "Color": {
+          "$ref": "#/definitions/ColorPropertyDef"
+        },
+        "Value": {
+          "$ref": "#/definitions/ValuePropertyDef"
+        },
+        "Size": {
+          "$ref": "#/definitions/SizePropertyDef"
+        },
+        "Tag": {
+          "$ref": "#/definitions/TagPropertyDef"
+        },
+        "Texture": {
+          "$ref": "#/definitions/TexturePropertyDef"
+        }
+      },
+      "additionalProperties": true
+    },
+    "SolidPropertiesDef": {
+      "type": "object",
+      "description": "Properties for solid element objects",
+      "properties": {
+        "Color": {
+          "$ref": "#/definitions/ColorPropertyDef"
+        },
+        "Value": {
+          "$ref": "#/definitions/ValuePropertyDef"
+        },
+        "Tag": {
+          "$ref": "#/definitions/TagPropertyDef"
+        },
+        "Texture": {
+          "$ref": "#/definitions/TexturePropertyDef"
+        }
+      },
+      "additionalProperties": true
+    },
+    "ShapePropertiesDef": {
+      "type": "object",
+      "description": "Properties for shape primitives",
+      "properties": {
+        "Color": {
+          "$ref": "#/definitions/ColorPropertyDef"
+        },
+        "Value": {
+          "$ref": "#/definitions/ValuePropertyDef"
+        },
+        "Tag": {
+          "$ref": "#/definitions/TagPropertyDef"
+        },
+        "Texture": {
+          "$ref": "#/definitions/TexturePropertyDef"
+        },
+        "Segment": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "minItems": 1,
+          "maxItems": 3,
+          "description": "Number of discretization segments"
+        }
+      },
+      "additionalProperties": true
+    },
+    "NormalPropertyDef": {
+      "oneOf": [
+        {
+          "type": "number",
+          "enum": [1, -1],
+          "description": "Single scalar for orientation (1=clockwise, -1=counter-clockwise)"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 3,
+          "description": "Common normal vector for planar geometry"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 3
+          },
+          "description": "Normal vectors for each element"
+        }
+      ]
+    },
+    "ColorPropertyDef": {
+      "oneOf": [
+        {
+          "type": "number",
+          "description": "Single grayscale value"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "description": "Color values (1=gray, 3=RGB, 4=RGBA, N=per-element gray)"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 4
+          },
+          "description": "RGB/RGBA colors for each element"
+        }
+      ]
+    },
+    "ValuePropertyDef": {
+      "oneOf": [
+        {
+          "type": "number",
+          "description": "Single numerical value for entire object"
+        },
+        {
+          "type": "string",
+          "description": "String value for entire object"
+        },
+        {
+          "type": "object",
+          "description": "Structure value for entire object"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "description": "N-by-M matrix for M-tuple properties per element"
+        }
+      ]
+    },
+    "SizePropertyDef": {
+      "oneOf": [
+        {
+          "type": "number",
+          "description": "Uniform size for all elements"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Size for each element"
+        }
+      ]
+    },
+    "TagPropertyDef": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "description": "Integer tag for entire object"
+        },
+        {
+          "type": "string",
+          "description": "String tag for entire object"
+        },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Tags for each element"
+        }
+      ]
+    },
+    "TexturePropertyDef": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Texture1DDef"
+        },
+        {
+          "$ref": "#/definitions/Texture2DDef"
+        },
+        {
+          "$ref": "#/definitions/Texture3DDef"
+        }
+      ]
+    },
+    "MeshVertex1Def": {
+      "title": "MeshVertex1",
+      "description": "1D vertex positions",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Array of 1D coordinates"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshVertex2Def": {
+      "title": "MeshVertex2",
+      "description": "2D vertex positions",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "description": "N-by-2 array of 2D coordinates"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshVertex3Def": {
+      "title": "MeshVertex3",
+      "description": "3D vertex positions",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "description": "N-by-3 array of 3D coordinates"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshVertex4Def": {
+      "title": "MeshVertex4",
+      "description": "4D vertex positions",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "description": "N-by-4 array of 4D coordinates"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshPolyLineDef": {
+      "title": "MeshPolyLine",
+      "description": "Polyline segments with ordered node indices",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "1D array of node indices (0 marks end of segment)"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshEdgeDef": {
+      "title": "MeshEdge",
+      "description": "Line segments defined by pairs of node indices",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "description": "N-by-2 array of edge node pairs"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshBSpline2DDef": {
+      "title": "MeshBSpline2D",
+      "description": "2D B-spline curve with control points and weights",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "description": "N-by-3 array: [x, y, weight]"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshTri3Def": {
+      "title": "MeshTri3",
+      "description": "Triangular surface elements",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "description": "N-by-3 array of triangle node indices"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshQuad4Def": {
+      "title": "MeshQuad4",
+      "description": "Quadrilateral surface elements",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "description": "N-by-4 array of quadrilateral node indices"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshPLCDef": {
+      "title": "MeshPLC",
+      "description": "Piecewise linear complex (polygonal surfaces)",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 3
+          },
+          "description": "Array of variable-length polygon node indices"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshNURBSDef": {
+      "title": "MeshNURBS",
+      "description": "3D NURBS surface with control points and weights",
+      "oneOf": [
+        {
+          "type": "array",
+          "description": "Nx-by-Ny-by-4 3D array: [x, y, z, weight]"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshTet4Def": {
+      "title": "MeshTet4",
+      "description": "4-node tetrahedral solid elements",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "description": "N-by-4 array of tetrahedral node indices"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshHex8Def": {
+      "title": "MeshHex8",
+      "description": "8-node hexahedral solid elements",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 8,
+            "maxItems": 8
+          },
+          "description": "N-by-8 array of hexahedral node indices"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshPyramid5Def": {
+      "title": "MeshPyramid5",
+      "description": "5-node pyramid solid elements",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "description": "N-by-5 array of pyramid node indices"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshTet10Def": {
+      "title": "MeshTet10",
+      "description": "10-node tetrahedral solid elements",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 10,
+            "maxItems": 10
+          },
+          "description": "N-by-10 array: [4 vertex indices, 6 mid-edge indices]"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshNodeDef": {
+      "title": "MeshNode",
+      "description": "Flexible vertex container with coordinates and properties",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "description": "N-by-M array: [coordinates..., properties...]"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshSurfDef": {
+      "title": "MeshSurf",
+      "description": "Flexible surface container with fixed node count per element",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3
+          },
+          "description": "N-by-M array: [node indices..., properties...]"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshPolyDef": {
+      "title": "MeshPoly",
+      "description": "Flexible polygon container with variable node count",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "array"
+                }
+              ]
+            },
+            "minItems": 3
+          },
+          "description": "Array of variable-length polygons with optional properties"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "MeshElemDef": {
+      "title": "MeshElem",
+      "description": "Flexible solid element container",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 4
+          },
+          "description": "N-by-M array: [node indices..., properties...]"
+        },
+        {
+          "$ref": "#/definitions/StructuredMeshDataDef"
+        }
+      ]
+    },
+    "StructuredMeshDataDef": {
+      "type": "object",
+      "description": "Structure form with data and optional properties",
+      "properties": {
+        "_DataInfo_": {
+          "type": "object",
+          "description": "JData metadata record"
+        },
+        "Data": {
+          "oneOf": [
+            {
+              "type": "array"
+            },
+            {
+              "$ref": "#/definitions/AnnotatedArrayDef"
+            }
+          ],
+          "description": "Primary mesh data"
+        },
+        "Properties": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/VertexPropertiesDef"
+            },
+            {
+              "$ref": "#/definitions/LinePropertiesDef"
+            },
+            {
+              "$ref": "#/definitions/SurfacePropertiesDef"
+            },
+            {
+              "$ref": "#/definitions/SolidPropertiesDef"
+            },
+            {
+              "type": "object",
+              "additionalProperties": true
+            }
+          ],
+          "description": "Optional properties and metadata"
+        }
+      },
+      "required": ["Data"],
+      "additionalProperties": true
+    },
+    "CSGObjectDef": {
+      "title": "CSGObject",
+      "description": "Root of constructive solid geometry object",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CSGNodeDef"
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "CSGOperatorDef": {
+      "title": "CSGOperator",
+      "description": "CSG Boolean operation with two operands",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CSGNodeDef"
+      },
+      "minItems": 2,
+      "maxItems": 3
+    },
+    "CSGNodeDef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Reference to named mesh object"
+        },
+        {
+          "type": "object",
+          "description": "Mesh object or CSG operation"
+        }
+      ]
+    },
+    "Texture1DDef": {
+      "title": "Texture1D",
+      "description": "1D texture data",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "1D grayscale texture"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 4
+          },
+          "description": "1D RGB/RGBA texture"
+        },
+        {
+          "$ref": "#/definitions/AnnotatedArrayDef"
+        }
+      ]
+    },
+    "Texture2DDef": {
+      "title": "Texture2D",
+      "description": "2D texture data",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "description": "2D grayscale texture"
+        },
+        {
+          "type": "array",
+          "description": "2D RGB/RGBA texture (Nx-by-Ny-by-C format)"
+        },
+        {
+          "$ref": "#/definitions/AnnotatedArrayDef"
+        }
+      ]
+    },
+    "Texture3DDef": {
+      "title": "Texture3D",
+      "description": "3D texture data",
+      "oneOf": [
+        {
+          "type": "array",
+          "description": "3D texture (Nx-by-Ny-by-Nz or Nx-by-Ny-by-Nz-by-C format)"
+        },
+        {
+          "$ref": "#/definitions/AnnotatedArrayDef"
+        }
+      ]
+    },
+    "ShapePrimitiveDef": {
+      "type": "object",
+      "title": "ShapePrimitive",
+      "description": "Base definition for shape primitives",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePropertiesDef"
+        }
+      ],
+      "additionalProperties": true
+    },
+    "ShapeBox2Def": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "First corner point [x0, y0]"
+            },
+            "P": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "Opposite corner point [x1, y1]"
+            }
+          },
+          "required": ["O", "P"]
+        }
+      ]
+    },
+    "ShapeDisc2Def": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "Center point [x0, y0]"
+            },
+            "R": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Radius"
+            }
+          },
+          "required": ["O", "R"]
+        }
+      ]
+    },
+    "ShapeBox3Def": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "First corner point [x0, y0, z0]"
+            },
+            "P": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Opposite corner point [x1, y1, z1]"
+            }
+          },
+          "required": ["O", "P"]
+        }
+      ]
+    },
+    "ShapeSphereDef": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Center point [x0, y0, z0]"
+            },
+            "R": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Radius"
+            }
+          },
+          "required": ["O", "R"]
+        }
+      ]
+    },
+    "ShapeCylinderDef": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "One end of cylinder axis [x0, y0, z0]"
+            },
+            "P": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Other end of cylinder axis [x1, y1, z1]"
+            },
+            "R": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Radius"
+            }
+          },
+          "required": ["O", "P", "R"]
+        }
+      ]
+    },
+    "ShapeEllipsoidDef": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Center point [x0, y0, z0]"
+            },
+            "R": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Semi-axes [rx, ry, rz]"
+            },
+            "Angle": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "Rotation angles [theta0, phi0]"
+            }
+          },
+          "required": ["O", "R"]
+        }
+      ]
+    },
+    "ShapeTorusDef": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Center point [x0, y0, z0]"
+            },
+            "R": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Major radius"
+            },
+            "Rtube": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Minor (tube) radius"
+            },
+            "N": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Normal direction [v1, v2, v3]"
+            }
+          },
+          "required": ["O", "R", "Rtube", "N"]
+        }
+      ]
+    },
+    "ShapeConeDef": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShapePrimitiveDef"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "O": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Center of bottom circle [x0, y0, z0]"
+            },
+            "P": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "Tip position [x1, y1, z1]"
+            },
+            "R": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Bottom radius"
+            }
+          },
+          "required": ["O", "P", "R"]
+        }
+      ]
+    },
+    "AnnotatedArrayDef": {
+      "type": "object",
+      "description": "JData annotated array format",
+      "properties": {
+        "_ArrayType_": {
+          "type": "string",
+          "enum": [
+            "uint8", "int8", "uint16", "int16", "uint32", "int32",
+            "uint64", "int64", "half", "single", "double",
+            "byte", "char", "logical"
+          ],
+          "description": "Data type of array elements"
+        },
+        "_ArraySize_": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "Dimensions of the N-D array"
+        },
+        "_ArrayOrder_": {
+          "type": "string",
+          "enum": ["r", "row", "c", "col", "column"],
+          "description": "Array storage order (default: row-major)"
+        },
+        "_ArrayData_": {
+          "description": "Raw array data"
+        },
+        "_ArrayZipType_": {
+          "type": "string",
+          "enum": ["zlib", "gzip", "lzma", "lz4", "blosc"],
+          "description": "Compression method"
+        },
+        "_ArrayZipSize_": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            {
+              "type": "integer",
+              "minimum": 0
+            }
+          ],
+          "description": "Size of compressed data"
+        },
+        "_ArrayZipData_": {
+          "type": "string",
+          "description": "Base64-encoded compressed byte stream"
+        }
+      },
+      "required": ["_ArrayType_", "_ArraySize_"],
+      "oneOf": [
+        {
+          "required": ["_ArrayData_"]
+        },
+        {
+          "required": ["_ArrayZipData_", "_ArrayZipType_"]
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}
